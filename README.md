@@ -21,58 +21,61 @@ are:
 However, we found some gaps between these datasets and what can be really applied on
 real-world last-mile problems. 
 
+
 * Small instances
 * Ignore streets, use only euclidian distances
-* 
+* No discussion on aggregation levels
+
 
 ### Why a new benchmark
 
-Mainteined by a company.
-Favours solutions that contain code.
+Mainteined by a company. Favours solutions that contain code.
 
 
 # Challanges
 
 ## Capacitated Vehicle Routing Problem
 
-
+ORTools
 K-Means + VRP
 
 
-## Capacitated Vehicle Routing Problem with Stochastic Customers
+## Capacitated Vehicle Routing Problem with Stochastic Customers 
 
 K-Means clustering
 Sweep
 
 
-## Location-Allocation problems
+## Routing + Facility location
 
 OR-Tools (p-HUB + VRP)
 
 
 # Installing and Running
 
+
 ## Download public data
 
-If you are running a UNIX-based system and have have `wget` and `unzip`, you can do:
+First we need to download the raw data from IBGE (~350Mb - compressed). If you are 
+running a UNIX-based system and have have `wget` and `unzip`, you can do:
 
 ```bash
 ./download.sh
+
 ```
 
 If you don't, you can manually download the data through the following links:
-
 * 
 
+Make sure your final file structure looks like:
+```
+```
+
 # Citing this work
-
 If you use this data in academic work, please cite our paper.
-
-
 ```
 tex
 ```
-
 
 # Disclaimer
 

@@ -5,7 +5,7 @@ wget -P ./data_raw -nc ftp://ftp.ibge.gov.br/Censos/Censo_Demografico_2010/Resul
 wget -P ./data_raw -nc ftp://ftp.ibge.gov.br/Censos/Censo_Demografico_2010/Resultados_do_Universo/Agregados_por_Setores_Censitarios/DF_20171016.zip
 
 # Unzip.
-unzip -o ./data_raw/SP_Capital_20190823.zip
-unzip -o ./data_raw/MG_20171016.zip
-unzip -o ./data_raw/RJ_20171016.zip
-unzip -o ./data_raw/DF_20171016.zip
+unzip -d ./data_raw -o ./data_raw/SP_Capital_20190823.zip
+unzip -d ./data_raw -o ./data_raw/MG_20171016.zip
+unzip -d ./data_raw -o ./data_raw/RJ_20171016.zip
+unzip -d ./data_raw -o ./data_raw/DF_20171016.zip

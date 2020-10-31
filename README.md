@@ -21,7 +21,6 @@ are:
 However, we found some gaps between these datasets and what can be really applied on
 real-world last-mile problems. 
 
-
 * Small instances
 * Ignore streets, use only euclidian distances
 * 
@@ -29,6 +28,7 @@ real-world last-mile problems.
 ### Why a new benchmark
 
 Mainteined by a company.
+Favours solutions that contain code.
 
 
 # Challanges

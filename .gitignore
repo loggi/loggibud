@@ -1,2 +1,5 @@
 # Virtualenv
 .venv
+
+# Raw data, too large to use Git.
+data_raw/*

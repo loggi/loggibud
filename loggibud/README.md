@@ -1,16 +1,16 @@
-VRPLoggi Benchmark
+Loggi BUD - Benchmark for Urban Deliveries
 ==================
 
 A dataset and benchmark for last-mile urban logistics.
 
 # Overview
 
-The VRPLoggi benchmark contains a dataset and benchmark scripts for urban logistics problems. The data is from public sources that are highly correlated with actual last-mile deliveries performed by Loggi. Similar to several benchmarks, we also publish a leaderboard of best known solutions.
+The Loggi Benchmark for Urban Deliveries contains a dataset and benchmark scripts for large-scale urban logistics problems. The data is from public sources that are highly correlated with actual last-mile deliveries performed by Loggi. Similar to several benchmarks, we publish a leaderboard of best known solutions.
 
 
 # Leaderboards
 
-### Capacitated Vehicle Routing Problem
+### Task 1.1 Capacitated Vehicle Routing Problem
 
 | Submission | Date       | Submitted by             | Solution                            | Distance (km)       |
 | ---------- | -----------| ------------------------ | ----------------------------------- | ------------------- |
@@ -18,17 +18,25 @@ The VRPLoggi benchmark contains a dataset and benchmark scripts for urban logist
 | kmortools1 | 2020/10/31 | Loggi - Network design   | KMeans + OR-tools VRP \[[code](.)\] | 10000.000           |
 
 
-### Capacitated Vehicle Routing Problem with Stochastic Customers
-
-| Date       | Submitted by             | Solution                     | Test distance (km)       | Train distance (km)       |
-| ---------- | ------------------------ | ---------------------------- | ------------------------ | --------------------------|
-| 2020/10/31 | Loggi - Network design   | KMeans                       | 10000.000                | 10000.000                 |
-| 2020/10/31 | Loggi - Network design   | Sweep                        | 10000.000                | 10000.000                 |
+### Task 1.2 Capacitated Vehicle Routing Problem with Stochastic Customers
 
 
-### Routing and Facility location
+| Submission | Date       | Submitted by             | Solution                            | Distance (km)       |
+| ---------- | -----------| ------------------------ | ----------------------------------- | ------------------- |
+| ortools1   | 2020/10/31 | Loggi - Network design   | OR-tools VRP \[[code](.)\]          | 10000.000           |
+| kmortools1 | 2020/10/31 | Loggi - Network design   | KMeans + OR-tools VRP \[[code](.)\] | 10000.000           |
+          |
 
-OR-Tools (p-HUB + VRP)
+### Task 1.3 End-to-end last-mile problem 
+
+
+| Submission | Date       | Submitted by             | Solution                            | Distance (km)       |
+| ---------- | -----------| ------------------------ | ----------------------------------- | ------------------- |
+| ortools1   | 2020/10/31 | Loggi - Network design   | OR-tools VRP \[[code](.)\]          | 10000.000           |
+| kmortools1 | 2020/10/31 | Loggi - Network design   | KMeans + OR-tools VRP \[[code](.)\] | 10000.000           |
+
+
+More tasks can come soon.
 
 # Motivation
 

@@ -38,6 +38,7 @@ def test_delivery_instance_generation():
         revenue_income_ratio=5e-6,
         size_average=100,
         size_range=10,
+        save_to="./test_results/deliveries",
     )
 
     result = generate_census_instances(config)
@@ -65,6 +66,10 @@ def test_cvrp_subinstance_generation():
         num_hubs=2,
         num_clusters=10,
         random_demand_ratio=0.05,
+        vehicle_capacity=120,
+        save_to="./test_results/cvrp",
     )
     result = generate_cvrp_subinstances(config, instances)
     assert result
+    assert len(result.train_instances) == 6
+    assert len(result.dev_instances) == 6

@@ -1,13 +1,7 @@
 from typing import List
 from dataclasses import dataclass
 
-from ..shared.types import Point
-
-
-@dataclass
-class CVRPDemand:
-    point: Point
-    demand: int
+from ..shared.types import Point, Delivery
 
 
 @dataclass
@@ -15,7 +9,7 @@ class CVRPInstance:
     name: str
 
     origin: Point
-    demands: List[CVRPDemand]
+    deliveries: List[Delivery]
 
     vehicle_capacity: int
 

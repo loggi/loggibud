@@ -1,7 +1,3 @@
-from dataclasses import asdict
-
-from dacite import from_dict
-
 from loggibud.cvrp.types import Point
 from loggibud.instance_generation.generate import (
     DeliveryGenerationConfig,
@@ -13,39 +9,22 @@ from loggibud.instance_generation.generate import (
 )
 
 
-def test_import():
-    assert from_dict(Point, asdict(Point(0, 0))) == Point(0, 0)
-
-
-# def test_census_data_loading():
-# 	result = prepare_census_data("rj")
-
-# 	expected_columns = {
-# 		"code_tract",
-# 		"name_muni",
-# 		"total_income",
-# 		"geometry",
-# 	}
-
-# 	assert expected_columns.issubset(set(result.columns))
-
-
 def test_delivery_instance_generation():
     config = DeliveryGenerationConfig(
         name="rj",
         num_train_instances=3,
-        num_dev_instances=3,
+        num_dev_instances=2,
         revenue_income_ratio=5e-6,
         size_average=100,
         size_range=10,
-        save_to="./test_results/deliveries",
+        save_to="./tests/results/delivery-instances",
     )
 
     result = generate_census_instances(config)
 
     assert result
-    assert result.train_instances
-    assert result.dev_instances
+    assert len(result.train_instances) == 3
+    assert len(result.dev_instances) == 3
     assert result.deliveries
 
 
@@ -53,7 +32,7 @@ def test_cvrp_subinstance_generation():
     config = DeliveryGenerationConfig(
         name="rj",
         num_train_instances=3,
-        num_dev_instances=3,
+        num_dev_instances=2,
         revenue_income_ratio=5e-6,
         size_average=100,
         size_range=10,
@@ -67,9 +46,10 @@ def test_cvrp_subinstance_generation():
         num_clusters=10,
         random_demand_ratio=0.05,
         vehicle_capacity=120,
-        save_to="./test_results/cvrp",
+        save_to="./tests/results/cvrp-instances",
     )
     result = generate_cvrp_subinstances(config, instances)
+
     assert result
     assert len(result.train_instances) == 6
     assert len(result.dev_instances) == 6

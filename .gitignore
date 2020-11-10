@@ -7,6 +7,7 @@ loggibud/instance_generation/data_raw/*
 # Testing
 .coverage
 __pychache__
+tests/results
 
 # Bytecode
 *.pyc

@@ -8,6 +8,7 @@ from .types import Point
 
 
 OSRM_HOST = "http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com"
+OSRM_HOST = "http://router.project-osrm.org"
 OSRM_TIMEOUT = 600
 
 

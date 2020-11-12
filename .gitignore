@@ -3,6 +3,9 @@
 
 # Raw data, too large to use Git.
 loggibud/instance_generation/data_raw/*
+osrm
+osrm.zip
+brazil-201110.osm.pbf
 
 # Testing
 .coverage

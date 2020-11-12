@@ -1,5 +1,5 @@
 from loggibud.cvrp.types import Point
-from loggibud.instance_generation.generate import (
+from loggibud.instance_generation.generators import (
     DeliveryGenerationConfig,
     CVRPGenerationConfig,
     prepare_census_data,
@@ -24,7 +24,7 @@ def test_delivery_instance_generation():
 
     assert result
     assert len(result.train_instances) == 3
-    assert len(result.dev_instances) == 3
+    assert len(result.dev_instances) == 2
     assert result.deliveries
 
 
@@ -52,4 +52,4 @@ def test_cvrp_subinstance_generation():
 
     assert result
     assert len(result.train_instances) == 6
-    assert len(result.dev_instances) == 6
+    assert len(result.dev_instances) == 4

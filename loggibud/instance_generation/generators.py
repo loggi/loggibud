@@ -4,6 +4,7 @@ import os
 import random
 import itertools
 import json
+import logging
 from pathlib import Path
 from io import BytesIO
 from collections import Counter
@@ -28,6 +29,7 @@ from .preprocessing import prepare_census_data
 # Create and register a new `tqdm` instance with `pandas`
 # (can use tqdm_gui, optional kwargs, etc.)
 tqdm.pandas()
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -118,6 +120,8 @@ def generate_census_instances(
 ) -> CensusGenerationResult:
     np.random.seed(config.seed)
 
+    logger.info(f"Starting census instance generation for {config.name}.")
+
     num_instances = config.num_train_instances + config.num_dev_instances
 
     sizes = (
@@ -126,7 +130,11 @@ def generate_census_instances(
     )
 
     # Compute deliveries from demand distribution.
+
+    logger.info(f"Preprocessing census data.")
     tract_df = prepare_census_data(config.name)
+
+    logger.info(f"Generating census delivery instances.")
     deliveries = generate_deliveries(tract_df, config.revenue_income_ratio)
 
     # Sample deliveries into instances.
@@ -143,6 +151,8 @@ def generate_census_instances(
     dev_instances = instances[config.num_train_instances :]
 
     if config.save_to is not None:
+        logger.info(f"Saving instances to {config.save_to}")
+
         for prefix, instances_subset in (
             ("train", train_instances),
             ("dev", dev_instances),
@@ -167,9 +177,11 @@ def generate_census_instances(
 def generate_cvrp_subinstances(
     config: CVRPGenerationConfig, generation: CensusGenerationResult
 ):
+    logger.info(f"Starting CVRP subinstance generation for {config.name}.")
     np.random.seed(config.seed)
 
     # Merge all train instance deliveries.
+    logger.info(f"Starting region clustering.")
     clustering_points = np.array(
         [
             [d.point.lng, d.point.lat]
@@ -187,11 +199,13 @@ def generate_cvrp_subinstances(
     demands = np.array([cluster_weights[i] for i in range(config.num_clusters)])
 
     # Compute the street distance between points.
+    logger.info(f"Computing distances between clusters.")
     distances_matrix = calculate_distance_matrix_m(
         [Point(x, y) for x, y in clustering.cluster_centers_]
     )
 
     # Solve the p-hub location problems between hubs.
+    logger.info(f"Solving allocation problem for clusters.")
     locations, allocations = solve_p_hub(
         PHubProblem(
             p=config.num_hubs,
@@ -247,20 +261,26 @@ def generate_cvrp_subinstances(
                 origin=hub,
                 deliveries=deliveries,
                 vehicle_capacity=config.vehicle_capacity,
+                distance_matrix_m=calculate_distance_matrix_m(
+                    [hub] + [d.point for d in deliveries]
+                ).tolist(),
             )
             for idx, (deliveries, hub) in enumerate(
                 zip(subinstance_deliveries, subinstance_hubs)
             )
         ]
 
+    logger.info(f"Computing train subinstances.")
     train_subinstances = [
         subinstance
-        for instance in generation.train_instances
+        for instance in tqdm(generation.train_instances)
         for subinstance in aggregate_subinstances(instance)
     ]
+
+    logger.info(f"Computing dev subinstances.")
     dev_subinstances = [
         subinstance
-        for instance in generation.dev_instances
+        for instance in tqdm(generation.dev_instances)
         for subinstance in aggregate_subinstances(instance)
     ]
 

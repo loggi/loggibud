@@ -12,6 +12,7 @@ class CVRPInstance:
     deliveries: List[Delivery]
 
     vehicle_capacity: int
+    distance_matrix_m: List[List[float]]
 
 
 @dataclass

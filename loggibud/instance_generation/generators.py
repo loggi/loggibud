@@ -261,9 +261,6 @@ def generate_cvrp_subinstances(
                 origin=hub,
                 deliveries=deliveries,
                 vehicle_capacity=config.vehicle_capacity,
-                distance_matrix_m=calculate_distance_matrix_m(
-                    [hub] + [d.point for d in deliveries]
-                ).tolist(),
             )
             for idx, (deliveries, hub) in enumerate(
                 zip(subinstance_deliveries, subinstance_hubs)

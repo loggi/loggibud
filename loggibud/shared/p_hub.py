@@ -18,7 +18,7 @@ class PHubProblem:
 
 def solve_p_hub(problem: PHubProblem) -> (np.array, np.array):
     """
-    Solves a p-hub location problems.
+    Solves p-hub location problems.
     """
 
     n_demands = problem.demands.shape[0]

@@ -15,7 +15,11 @@ The easiest way to use to reproduce the distances computed on the benchmark is t
 3. Run an OSRM backend container with the following command:
 
 ```
-docker run --rm -t -i --name osrm -p 5000:5000 -v "${PWD}/osrm:/data" osrm/osrm-backend osrm-routed --algorithm ch /data/brazil-201110.osrm
+docker run --rm -t -id \
+	--name osrm \
+	-p 5000:5000 \
+	-v "${PWD}/osrm:/data" \
+	osrm/osrm-backend osrm-routed --algorithm ch /data/brazil-201110.osrm --max-table-size 10000
 ```
 
 # I have no resources to run my own server

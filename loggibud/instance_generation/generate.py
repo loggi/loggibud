@@ -15,8 +15,8 @@ def generate_rj():
         name="rj",
         num_train_instances=90,
         num_dev_instances=30,
-        revenue_income_ratio=1e-5,
-        size_average=28531,
+        revenue_income_ratio=1e-4,
+        size_average=24531,
         size_range=4430,
         save_to="./data/delivery-instances",
     )
@@ -25,7 +25,7 @@ def generate_rj():
 
     config = CVRPGenerationConfig(
         name="rj",
-        num_hubs=9,
+        num_hubs=11,
         num_clusters=256,
         random_demand_ratio=0.01,
         vehicle_capacity=120,

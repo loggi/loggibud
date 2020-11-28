@@ -4,7 +4,7 @@ from typing import List
 from shapely.geometry import Point as ShapelyPoint
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Point:
     lng: float
     lat: float
@@ -17,8 +17,9 @@ class Point:
         return cls(p.x, p.y)
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Delivery:
+    id: str
     point: Point
     size: int
 

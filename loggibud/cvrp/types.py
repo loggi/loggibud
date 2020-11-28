@@ -16,7 +16,15 @@ class CVRPInstance:
 
 @dataclass
 class CVRPSolutionVehicle:
-    demand_indexes: List[int]
+
+    origin: Point
+
+    deliveries: List[Delivery]
+    """Ordered list of deliveries from the vehicle."""
+
+    @property
+    def circuit(self) -> List[Point]:
+        return [self.origin] + [d.point for d in self.deliveries] + [self.origin]
 
 
 @dataclass

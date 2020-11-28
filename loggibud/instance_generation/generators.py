@@ -5,6 +5,7 @@ import random
 import itertools
 import json
 import logging
+import uuid
 from pathlib import Path
 from io import BytesIO
 from collections import Counter
@@ -43,6 +44,7 @@ class DeliveryGenerationConfig:
     seed: int = 0
     save_to: Optional[str] = None
 
+    @classmethod
     def get_default(cls):
         return cls(
             name="rj",
@@ -64,6 +66,7 @@ class CVRPGenerationConfig:
     seed: int = 0
     save_to: Optional[str] = None
 
+    @classmethod
     def get_default(cls):
         return cls(
             name="rj",
@@ -101,6 +104,7 @@ def generate_deliveries(
             # If is contained, return.
             if polygon.contains(p):
                 return Delivery(
+                    id=str(uuid.uuid4()),
                     point=Point.from_shapely(p),
                     size=random.randint(1, 10),
                 )

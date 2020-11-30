@@ -1,7 +1,8 @@
 import json
+from pathlib import Path
 from argparse import ArgumentParser
+from typing import Union
 
-from dacite import from_dict
 
 from ..shared.distances import calculate_distance_matrix_m
 from .types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
@@ -22,7 +23,7 @@ def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
     locations = [instance.origin] + [d.point for d in instance.deliveries]
 
     # Compute the distance matrix between points.
-    distance_matrix = calculate_distance_matrix_m(locations)
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(int)
 
     # Build a hash distance map between points.
     distance_map = {
@@ -32,30 +33,50 @@ def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
     }
 
     # Compute the distance for every route circuit.
-    route_distances_km = [
-        sum(distance_map[s, d] for s, d in zip(v.circuit[:-1], v.circuit[1:])) / 1000.
+    route_distances_dm = [
+        sum(distance_map[s, d] for s, d in zip(v.circuit[:-1], v.circuit[1:]))
         for v in solution.vehicles
     ]
 
-    return sum(route_distances_km)
+    # Convert to km.
+    return sum(route_distances_dm) / 10_000
 
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    
-    parser.add_argument('--instance', type=str, required=True)
-    parser.add_argument('--solution', type=str, required=True)
+
+    parser.add_argument("--instances", type=str, required=True)
+    parser.add_argument("--solutions", type=str, required=True)
 
     args = parser.parse_args()
 
-    with open(args.instance) as f:
-        data = json.load(f)
+    instances_path = Path(args.instances)
+    solutions_path = Path(args.solutions)
 
-    instance = from_dict(CVRPInstance, data)
+    if instances_path.is_file() and solutions_path.is_file():
+        instances = {"": CVRPInstance.from_file(instances_path)}
+        solutions = {"": CVRPSolution.from_file(solutions_path)}
 
-    with open(args.solution) as f:
-        data = json.load(f)
+    elif instances_path.is_dir() and solutions_path.is_dir():
+        instances = {
+            f.stem: CVRPInstance.from_file(f) for f in instances_path.iterdir()
+        }
+        solutions = {
+            f.stem: CVRPSolution.from_file(f) for f in solutions_path.iterdir()
+        }
 
-    solution = from_dict(CVRPSolution, data)
+    else:
+        raise ValueError("input files do not match, use files or directories.")
 
-    print(evaluate_cvrp_solution(instance, solution))
+    if set(instances) != set(solutions):
+        raise ValueError(
+            "input files do not match, the solutions and instances should be the same."
+        )
+
+    stems = instances.keys()
+
+    results = [
+        evaluate_cvrp_solution(instances[stem], solutions[stem]) for stem in stems
+    ]
+
+    print(sum(results))

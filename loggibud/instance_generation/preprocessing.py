@@ -27,6 +27,7 @@ MUNICIPALITIES = {
         "belford roxo",
         "nilópolis",
         "são joão de meriti",
+        "mesquita",
     },
 }
 

@@ -12,7 +12,6 @@ from collections import Counter
 from dataclasses import dataclass, asdict
 from typing import List, Optional
 
-import folium
 import numpy as np
 import pandas as pd
 
@@ -39,21 +38,13 @@ class DeliveryGenerationConfig:
     num_train_instances: int
     num_dev_instances: int
     revenue_income_ratio: float
-    size_average: int
-    size_range: int
+    num_deliveries_average: int
+    num_deliveries_range: int
+    vehicle_capacity: int
+    max_size: int
+    max_hubs: int
     seed: int = 0
     save_to: Optional[str] = None
-
-    @classmethod
-    def get_default(cls):
-        return cls(
-            name="rj",
-            num_train_instances=90,
-            num_dev_instances=30,
-            revenue_income_ratio=1e-5,
-            size_average=27_541,
-            size_range=5_301,
-        )
 
 
 @dataclass
@@ -61,7 +52,6 @@ class CVRPGenerationConfig:
     name: str
     num_hubs: int
     num_clusters: int
-    random_demand_ratio: float
     vehicle_capacity: int
     seed: int = 0
     save_to: Optional[str] = None
@@ -70,8 +60,7 @@ class CVRPGenerationConfig:
     def get_default(cls):
         return cls(
             name="rj",
-            num_hubs=9,
-            random_demand_ratio=0.01,
+            num_hubs=6,
             vehicle_capacity=120,
         )
 
@@ -92,7 +81,7 @@ class CVRPGenerationResult:
 
 
 def generate_deliveries(
-    tract_df: pd.DataFrame, revenue_income_ratio: float
+    tract_df: pd.DataFrame, revenue_income_ratio: float, max_size: int
 ) -> List[Delivery]:
     def new_point(polygon):
         # Loop until the point matches the poligon.
@@ -106,7 +95,7 @@ def generate_deliveries(
                 return Delivery(
                     id=str(uuid.uuid4()),
                     point=Point.from_shapely(p),
-                    size=random.randint(1, 10),
+                    size=random.randint(1, max_size),
                 )
 
     region_samples = tract_df.progress_apply(
@@ -129,8 +118,12 @@ def generate_census_instances(
     num_instances = config.num_train_instances + config.num_dev_instances
 
     sizes = (
-        np.random.randint(-config.size_range, config.size_range, size=num_instances)
-        + config.size_average
+        np.random.randint(
+            -config.num_deliveries_range,
+            config.num_deliveries_range,
+            size=num_instances,
+        )
+        + config.num_deliveries_average
     )
 
     # Compute deliveries from demand distribution.
@@ -139,7 +132,9 @@ def generate_census_instances(
     tract_df = prepare_census_data(config.name)
 
     logger.info(f"Generating census delivery instances.")
-    deliveries = generate_deliveries(tract_df, config.revenue_income_ratio)
+    deliveries = generate_deliveries(
+        tract_df, config.revenue_income_ratio, config.max_size
+    )
 
     # Sample deliveries into instances.
     instances = [
@@ -228,12 +223,6 @@ def generate_cvrp_subinstances(
         # Deterministic hub assignment.
         cluster_index = clustering.predict(
             [[d.point.lng, d.point.lat] for d in instance.deliveries]
-        )
-
-        # Random hub assignment.
-        num_random_points = int(len(instance.deliveries) * config.random_demand_ratio)
-        cluster_index[:num_random_points] = np.random.choice(
-            cluster_index, size=num_random_points
         )
 
         # Group deliveries per cluster.

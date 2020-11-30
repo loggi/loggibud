@@ -1,3 +1,7 @@
+"""
+Implements a CVRP solver based on Google OR-tools.
+"""
+
 import logging
 import sys
 import json
@@ -13,22 +17,26 @@ from ortools.constraint_solver import routing_enums_pb2
 from dacite import from_dict
 
 from ...shared.distances import calculate_distance_matrix_m
-from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
+from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, JSONDataclassMixin
 
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
-class ORToolsParams:
-    first_solution_strategy: int
-    local_search_metaheuristic: int
+class ORToolsParams(JSONDataclassMixin):
+    first_solution_strategy: Optional[
+        int
+    ] = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+    local_search_metaheuristic: Optional[
+        int
+    ] = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
     max_vehicles: Optional[int] = None
     solution_limit: Optional[int] = None
-    time_limit_ms: Optional[int] = 300_000
+    time_limit_ms: Optional[int] = 60_000
 
     @classmethod
-    def get_base_local_search(cls):
+    def get_baseline(cls):
         return cls(
             first_solution_strategy=routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC,
             local_search_metaheuristic=routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH,
@@ -38,12 +46,11 @@ class ORToolsParams:
 def solve_cvrp(
     instance: CVRPInstance,
     params: Optional[ORToolsParams] = None,
-    distance_matrix: Optional[np.ndarray] = None,
 ) -> Optional[CVRPSolution]:
     """Solves a CVRP instance using ORTools"""
-    
+
     # Initialize parameters if not provided.
-    params = params or ORToolsParams.get_base_local_search()
+    params = params or ORToolsParams.get_baseline()
 
     # Number of points is the number of deliveries + the origin.
     num_points = len(instance.deliveries) + 1
@@ -61,11 +68,11 @@ def solve_cvrp(
     model = pywrapcp.RoutingModel(manager)
 
     # Unwrap the size index for every point.
-    sizes = np.array([0] + [d.size for d in instance.deliveries])
+    sizes = np.array([0] + [d.size for d in instance.deliveries], dtype=np.int)
 
     def capacity_callback(src):
         src = manager.IndexToNode(src)
-        return int(sizes[src])
+        return sizes[src]
 
     capacity_callback_index = model.RegisterUnaryTransitCallback(capacity_callback)
     model.AddDimension(
@@ -77,16 +84,12 @@ def solve_cvrp(
 
     # Compute the distance matrix between points.
     logger.info("Computing distance matrix.")
-    distance_matrix = (
-        distance_matrix
-        if distance_matrix is not None
-        else calculate_distance_matrix_m(locations) * 10
-    )
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(np.int)
 
     def distance_callback(src, dst):
         x = manager.IndexToNode(src)
         y = manager.IndexToNode(dst)
-        return int(distance_matrix[x, y])
+        return distance_matrix[x, y]
 
     distance_callback_index = model.RegisterTransitCallback(distance_callback)
     model.SetArcCostEvaluatorOfAllVehicles(distance_callback_index)
@@ -110,7 +113,7 @@ def solve_cvrp(
     # For more information about the type error:
     # https://developers.google.com/optimization/routing/routing_options
     if not assignment:
-            return None
+        return None
 
     def extract_solution(vehicle_id):
         # Get the start node for route.
@@ -142,29 +145,16 @@ def solve_cvrp(
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     parser = ArgumentParser()
-    
-    parser.add_argument('--instance', type=str, required=True)
-    parser.add_argument('--output', type=str)
-    parser.add_argument('--params', type=str)
+
+    parser.add_argument("--instance", type=str, required=True)
+    parser.add_argument("--output", type=str)
+    parser.add_argument("--params", type=str)
 
     args = parser.parse_args()
 
-    with open(args.instance) as f:
-        data = json.load(f)
+    instance = CVRPInstance.from_file(args.instance)
+    params = ORToolsParams.from_file(args.params) if args.params else None
 
-    instance = from_dict(CVRPInstance, data)
-
-    if args.params:
-        with open(args.params) as f:
-            data = json.load(f)
-
-        params = from_dict(ORToolsParams, data)
-    else:
-        params = None
-
+    # Run solver.
     solution = solve_cvrp(instance, params)
-
-    data = asdict(solution)
-
-    with open(args.output or "result.json", "w") as f:
-        data = json.dump(data, f)
+    solution.to_file(args.output or "result.json")

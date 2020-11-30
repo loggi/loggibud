@@ -141,6 +141,8 @@ def generate_census_instances(
         DeliveryProblemInstance(
             name=f"{config.name}-{i}",
             deliveries=np.random.choice(deliveries, size=size).tolist(),
+            vehicle_capacity=config.vehicle_capacity,
+            max_hubs=config.max_hubs,
         )
         for i, size in enumerate(sizes)
     ]

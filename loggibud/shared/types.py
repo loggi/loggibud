@@ -1,7 +1,25 @@
-from dataclasses import dataclass
-from typing import List
+import json
+from dataclasses import dataclass, asdict
+from pathlib import Path
+from typing import List, Union
 
+from dacite import from_dict
 from shapely.geometry import Point as ShapelyPoint
+
+
+class JSONDataclassMixin:
+    @classmethod
+    def from_file(cls, path: Union[Path, str]) -> "JSONDataclassMixin":
+        with open(path) as f:
+            data = json.load(f)
+
+        return from_dict(cls, data)
+
+    def to_file(self, path: Union[Path, str]) -> None:
+        with open(path, "w") as f:
+            json.dump(asdict(self), f)
+
+        return
 
 
 @dataclass(unsafe_hash=True)
@@ -25,6 +43,8 @@ class Delivery:
 
 
 @dataclass
-class DeliveryProblemInstance:
+class DeliveryProblemInstance(JSONDataclassMixin):
     name: str
     deliveries: List[Delivery]
+    vehicle_capacity: int
+    max_hubs: int

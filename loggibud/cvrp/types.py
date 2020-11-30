@@ -5,22 +5,10 @@ from dataclasses import dataclass, asdict
 
 from dacite import from_dict
 
-from ..shared.types import Point, Delivery
+from ..shared.types import Point, Delivery, JSONDataclassMixin
 
 
-class JSONDataclassMixin:
-    @classmethod
-    def from_file(cls, path: Union[Path, str]) -> "JSONDataclassMixin":
-        with open(path) as f:
-            data = json.load(f)
 
-        return from_dict(cls, data)
-
-    def to_file(self, path: Union[Path, str]) -> None:
-        with open(path, "w") as f:
-            json.dump(asdict(self), f)
-
-        return
 
 
 @dataclass

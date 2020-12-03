@@ -62,7 +62,6 @@ if __name__ == "__main__":
     parser.add_argument("--cvrp", type=str)
     parser.add_argument("--delivery", type=str)
 
-
     args = parser.parse_args()
 
     # Load instance and heuristic params.

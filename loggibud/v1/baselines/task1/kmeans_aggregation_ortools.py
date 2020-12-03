@@ -26,7 +26,13 @@ import numpy as np
 from sklearn.cluster import MiniBatchKMeans
 from dacite import from_dict
 
-from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery, Point
+from loggibud.v1.types import (
+    CVRPInstance,
+    CVRPSolution,
+    CVRPSolutionVehicle,
+    Delivery,
+    Point,
+)
 from ..shared.ortools import solve_cvrp as ortools_solve_cvrp, ORToolsParams
 
 

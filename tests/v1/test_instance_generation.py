@@ -1,5 +1,5 @@
-from loggibud.cvrp.types import Point
-from loggibud.instance_generation.generators import (
+from loggibud.v1.types import Point
+from loggibud.v1.instance_generation.generators import (
     DeliveryGenerationConfig,
     CVRPGenerationConfig,
     prepare_census_data,
@@ -15,8 +15,11 @@ def test_delivery_instance_generation():
         num_train_instances=3,
         num_dev_instances=2,
         revenue_income_ratio=5e-6,
-        size_average=100,
-        size_range=10,
+        num_deliveries_average=100,
+        num_deliveries_range=10,
+        vehicle_capacity=120,
+        max_size=10,
+        max_hubs=2,
         save_to="./tests/results/delivery-instances",
     )
 
@@ -34,8 +37,11 @@ def test_cvrp_subinstance_generation():
         num_train_instances=3,
         num_dev_instances=2,
         revenue_income_ratio=5e-6,
-        size_average=100,
-        size_range=10,
+        num_deliveries_average=100,
+        num_deliveries_range=10,
+        vehicle_capacity=120,
+        max_size=10,
+        max_hubs=2,
     )
 
     instances = generate_census_instances(config)
@@ -44,7 +50,6 @@ def test_cvrp_subinstance_generation():
         name="rj",
         num_hubs=2,
         num_clusters=10,
-        random_demand_ratio=0.05,
         vehicle_capacity=120,
         save_to="./tests/results/cvrp-instances",
     )

@@ -3,10 +3,8 @@ from pathlib import Path
 from argparse import ArgumentParser
 from typing import Union
 
-
-from ..shared.distances import calculate_distance_matrix_m
-from .types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
-from .baselines import ortools1
+from ..distances import calculate_distance_matrix_m
+from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
 
 
 def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):

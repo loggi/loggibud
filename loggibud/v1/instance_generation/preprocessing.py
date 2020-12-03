@@ -8,11 +8,11 @@ BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 CENSUS_INCOME_FILES = {
-    "rj": f"{BASE_PATH}/data_raw/RJ/Base informaçoes setores2010 universo RJ/CSV/DomicilioRenda_RJ.csv",
+    "rj": f"{BASE_PATH}/../../../data_raw/RJ/Base informaçoes setores2010 universo RJ/CSV/DomicilioRenda_RJ.csv",
 }
 
 CENSUS_POLYGON_FILES = {
-    "rj": f"{BASE_PATH}/data_raw/33.gpkg",
+    "rj": f"{BASE_PATH}/../../../data_raw/33.gpkg",
 }
 
 MUNICIPALITIES = {

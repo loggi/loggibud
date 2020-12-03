@@ -19,10 +19,9 @@ from tqdm import tqdm
 from shapely.geometry import Point as ShapelyPoint
 from sklearn.cluster import MiniBatchKMeans
 
-from ..cvrp.types import CVRPInstance
-from ..shared.distances import calculate_distance_matrix_m
-from ..shared.types import Point, Delivery, DeliveryProblemInstance
-from ..shared.p_hub import PHubProblem, solve_p_hub
+from ..distances import calculate_distance_matrix_m
+from ..types import Point, Delivery, DeliveryProblemInstance, CVRPInstance
+from ..baselines.shared.p_hub import PHubProblem, solve_p_hub
 from .preprocessing import prepare_census_data
 
 

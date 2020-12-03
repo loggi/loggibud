@@ -1,8 +1,7 @@
 import logging
 import sys
 
-from loggibud.cvrp.types import Point
-from loggibud.instance_generation.generators import (
+from .generators import (
     DeliveryGenerationConfig,
     CVRPGenerationConfig,
     generate_census_instances,

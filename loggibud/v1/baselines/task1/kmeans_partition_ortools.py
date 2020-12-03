@@ -29,8 +29,8 @@ from sklearn.cluster import KMeans
 from dacite import from_dict
 from tqdm import tqdm
 
-from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
-from .ortools1 import solve_cvrp as ortools_solve_cvrp, ORToolsParams
+from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
+from loggibud.v1.baselines.shared.ortools import solve_cvrp as ortools_solve_cvrp, ORToolsParams
 
 
 logger = logging.getLogger(__name__)

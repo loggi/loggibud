@@ -2,7 +2,8 @@
 .venv
 
 # Raw data, too large to use Git.
-loggibud/instance_generation/data_raw/*
+data_raw
+data
 osrm
 osrm.zip
 brazil-201110.osm.pbf

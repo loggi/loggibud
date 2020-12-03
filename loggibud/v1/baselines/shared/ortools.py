@@ -16,8 +16,8 @@ from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 from dacite import from_dict
 
-from ...shared.distances import calculate_distance_matrix_m
-from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, JSONDataclassMixin
+from loggibud.v1.distances import calculate_distance_matrix_m
+from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, JSONDataclassMixin
 
 
 logger = logging.getLogger(__name__)
@@ -25,12 +25,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ORToolsParams(JSONDataclassMixin):
-    first_solution_strategy: Optional[
-        int
-    ] = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
-    local_search_metaheuristic: Optional[
-        int
-    ] = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+    first_solution_strategy: Optional[int] \
+        = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+    local_search_metaheuristic: Optional[int] \
+        = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
     max_vehicles: Optional[int] = None
     solution_limit: Optional[int] = None
     time_limit_ms: Optional[int] = 60_000

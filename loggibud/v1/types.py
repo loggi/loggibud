@@ -48,3 +48,32 @@ class DeliveryProblemInstance(JSONDataclassMixin):
     deliveries: List[Delivery]
     vehicle_capacity: int
     max_hubs: int
+
+
+@dataclass
+class CVRPInstance(JSONDataclassMixin):
+    name: str
+
+    origin: Point
+    deliveries: List[Delivery]
+
+    vehicle_capacity: int
+
+
+@dataclass
+class CVRPSolutionVehicle:
+
+    origin: Point
+
+    deliveries: List[Delivery]
+    """Ordered list of deliveries from the vehicle."""
+
+    @property
+    def circuit(self) -> List[Point]:
+        return [self.origin] + [d.point for d in self.deliveries] + [self.origin]
+
+
+@dataclass
+class CVRPSolution(JSONDataclassMixin):
+    name: str
+    vehicles: List[CVRPSolutionVehicle]

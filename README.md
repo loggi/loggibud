@@ -43,7 +43,7 @@ This is an extension of the task 1.2, but without fixed dispatch locations. Ther
 
 This benchmark is an effort to make new operations research solutions closer to real-world applications faced by delivery companies. We believe this work can help both practitioners and academics to reduce the gap between state-of-the-art and practice.
 
-We identify that several promising solutions in academic literature have evaluation issues. Several papers only include experiments for toy problems that do not resemble real applications. We also expected real-world instances to help researchers to come up with new ideas for solving large routing and location problems.
+We identify that several promising solutions in academic literature have evaluation issues. Several papers only include experiments for small or unrealistic problems. We also expected real-world instances to help researchers to come up with new ideas for solving large routing and location problems.
 
 ### Why a new dataset
 

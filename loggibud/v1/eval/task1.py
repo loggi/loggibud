@@ -3,7 +3,7 @@ from pathlib import Path
 from argparse import ArgumentParser
 from typing import Union
 
-from ..distances import calculate_distance_matrix_m
+from ..distances import calculate_distance_matrix_m, calculate_route_distance_m
 from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
 
 
@@ -17,27 +17,13 @@ def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
     max_capacity = max(sum(d.size for d in v.deliveries) for v in solution.vehicles)
     assert max_capacity <= instance.vehicle_capacity
 
-    # Compute objective result.
-    locations = [instance.origin] + [d.point for d in instance.deliveries]
-
-    # Compute the distance matrix between points.
-    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(int)
-
-    # Build a hash distance map between points.
-    distance_map = {
-        (s, d): distance_matrix[i, j]
-        for i, s in enumerate(locations)
-        for j, d in enumerate(locations)
-    }
-
-    # Compute the distance for every route circuit.
-    route_distances_dm = [
-        sum(distance_map[s, d] for s, d in zip(v.circuit[:-1], v.circuit[1:]))
+    route_distances_m = [
+        calculate_route_distance_m(v.circuit)
         for v in solution.vehicles
     ]
 
     # Convert to km.
-    return sum(route_distances_dm) / 10_000
+    return round(sum(route_distances_m) / 1_000, 4)
 
 
 if __name__ == "__main__":

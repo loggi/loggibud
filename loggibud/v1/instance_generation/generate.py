@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from .generators import (
     DeliveryGenerationConfig,
@@ -33,7 +32,7 @@ def generate_rj():
         save_to="./data/cvrp-instances-1.0",
     )
 
-    cvrp_result = generate_cvrp_subinstances(config, delivery_result)
+    generate_cvrp_subinstances(config, delivery_result)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,8 @@
-import json
 from pathlib import Path
 from argparse import ArgumentParser
-from typing import Union
 
-from ..distances import calculate_distance_matrix_m, calculate_route_distance_m
-from ..types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
+from ..distances import calculate_route_distance_m
+from ..types import CVRPInstance, CVRPSolution
 
 
 def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
@@ -18,8 +16,7 @@ def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
     assert max_capacity <= instance.vehicle_capacity
 
     route_distances_m = [
-        calculate_route_distance_m(v.circuit)
-        for v in solution.vehicles
+        calculate_route_distance_m(v.circuit) for v in solution.vehicles
     ]
 
     # Convert to km.

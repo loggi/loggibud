@@ -1,20 +1,13 @@
 import logging
-import json
 import os
 import importlib
 from argparse import ArgumentParser
-from datetime import timedelta
-from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Optional
 from multiprocessing import Pool
 
-import numpy as np
-from sklearn.cluster import KMeans
-from dacite import from_dict
 from tqdm import tqdm
 
-from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle
+from loggibud.v1.types import CVRPInstance
 
 
 if __name__ == "__main__":
@@ -23,7 +16,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument("--instances", type=str, required=True)
-    parser.add_argument("--module", type=str, required=True )
+    parser.add_argument("--module", type=str, required=True)
     parser.add_argument("--method", type=str, default="solve")
     parser.add_argument("--output", type=str)
     parser.add_argument("--params", type=str)
@@ -42,11 +35,11 @@ if __name__ == "__main__":
     files = [path] if path.is_file() else list(path.iterdir())
 
     if args.params and not args.params_class:
-        raise ValueError("To use custom settings, you must provide both params and params_class.")
+        raise ValueError(
+            "To use custom settings, you must provide both params and params_class."
+        )
 
-    params = (
-        params_class.from_file(args.params) if args.params else None
-    )
+    params = params_class.from_file(args.params) if args.params else None
 
     params = None
 

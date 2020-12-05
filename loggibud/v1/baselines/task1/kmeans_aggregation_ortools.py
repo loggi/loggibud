@@ -2,37 +2,26 @@
 This baseline is a simple partioning followed by a routing problem.
 
 It uses pure K-Means to partition the problem into K regions and them uses the ORTools solver to solve
-each subinstance. It's similar to the method proposed by Ruhan et al [1], but without the balancing 
+each subinstance. It's similar to the method proposed by Ruhan et al [1], but without the balancing
 component, as we observed that most instances are already well balanced and far beyond vehicle capacity.
 
 Refs:
 
-[1] R. He, W. Xu, J. Sun and B. Zu, "Balanced K-Means Algorithm for Partitioning Areas in Large-Scale 
-Vehicle Routing Problem," 2009 Third International Symposium on Intelligent Information Technology 
-Application, Shanghai, 2009, pp. 87-90, doi: 10.1109/IITA.2009.307. Available at 
+[1] R. He, W. Xu, J. Sun and B. Zu, "Balanced K-Means Algorithm for Partitioning Areas in Large-Scale
+Vehicle Routing Problem," 2009 Third International Symposium on Intelligent Information Technology
+Application, Shanghai, 2009, pp. 87-90, doi: 10.1109/IITA.2009.307. Available at
 https://ieeexplore.ieee.org/abstract/document/5369502.
 
 
 """
 import logging
-import json
-import uuid
-from argparse import ArgumentParser
-from datetime import timedelta
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
 from sklearn.cluster import MiniBatchKMeans
-from dacite import from_dict
 
-from loggibud.v1.types import (
-    CVRPInstance,
-    CVRPSolution,
-    CVRPSolutionVehicle,
-    Delivery,
-    Point,
-)
+from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery
 from ..shared.ortools import solve_cvrp as ortools_solve_cvrp, ORToolsParams
 
 

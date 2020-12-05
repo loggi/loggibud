@@ -1,13 +1,11 @@
 # coding: utf-8
 
-import os
 import random
 import itertools
 import json
 import logging
 import uuid
 from pathlib import Path
-from io import BytesIO
 from collections import Counter
 from dataclasses import dataclass, asdict
 from typing import List, Optional
@@ -127,10 +125,10 @@ def generate_census_instances(
 
     # Compute deliveries from demand distribution.
 
-    logger.info(f"Preprocessing census data.")
+    logger.info("Preprocessing census data.")
     tract_df = prepare_census_data(config.name)
 
-    logger.info(f"Generating census delivery instances.")
+    logger.info("Generating census delivery instances.")
     deliveries = generate_deliveries(
         tract_df, config.revenue_income_ratio, config.max_size
     )
@@ -181,7 +179,7 @@ def generate_cvrp_subinstances(
     np.random.seed(config.seed)
 
     # Merge all train instance deliveries.
-    logger.info(f"Starting region clustering.")
+    logger.info("Starting region clustering.")
     clustering_points = np.array(
         [
             [d.point.lng, d.point.lat]
@@ -199,13 +197,13 @@ def generate_cvrp_subinstances(
     demands = np.array([cluster_weights[i] for i in range(config.num_clusters)])
 
     # Compute the street distance between points.
-    logger.info(f"Computing distances between clusters.")
+    logger.info("Computing distances between clusters.")
     distances_matrix = calculate_distance_matrix_m(
         [Point(x, y) for x, y in clustering.cluster_centers_]
     )
 
     # Solve the p-hub location problems between hubs.
-    logger.info(f"Solving allocation problem for clusters.")
+    logger.info("Solving allocation problem for clusters.")
     locations, allocations = solve_p_hub(
         PHubProblem(
             p=config.num_hubs,
@@ -261,14 +259,14 @@ def generate_cvrp_subinstances(
             )
         ]
 
-    logger.info(f"Computing train subinstances.")
+    logger.info("Computing train subinstances.")
     train_subinstances = [
         subinstance
         for instance in tqdm(generation.train_instances)
         for subinstance in aggregate_subinstances(instance)
     ]
 
-    logger.info(f"Computing dev subinstances.")
+    logger.info("Computing dev subinstances.")
     dev_subinstances = [
         subinstance
         for instance in tqdm(generation.dev_instances)

@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List, Union
 
 from dacite import from_dict
-from shapely.geometry import Point as ShapelyPoint
 
 
 class JSONDataclassMixin:
@@ -26,9 +25,6 @@ class JSONDataclassMixin:
 class Point:
     lng: float
     lat: float
-
-    def to_shapely(self):
-        return ShapelyPoint(lng, lat)
 
     @classmethod
     def from_shapely(cls, p):

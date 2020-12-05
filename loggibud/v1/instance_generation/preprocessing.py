@@ -70,7 +70,7 @@ def load_geodata_per_sector(uf):
 
 def prepare_census_data(instance_name):
     if instance_name not in INSTANCE_UF:
-        raise ValidationError("Invalid instance identifier. Is it configured?")
+        raise ValueError("Invalid instance identifier. Is it configured?")
 
     census_geo_df = load_geodata_per_sector(INSTANCE_UF[instance_name])
     census_income_df = load_income_per_sector(INSTANCE_UF[instance_name])

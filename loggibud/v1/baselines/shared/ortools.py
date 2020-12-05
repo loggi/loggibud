@@ -3,18 +3,13 @@ Implements a CVRP solver based on Google OR-tools.
 """
 
 import logging
-import sys
-import json
-from argparse import ArgumentParser
 from datetime import timedelta
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Optional
 
-import requests
 import numpy as np
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
-from dacite import from_dict
 
 from loggibud.v1.distances import calculate_distance_matrix_m
 from loggibud.v1.types import (
@@ -145,21 +140,3 @@ def solve_cvrp(
         name=instance.name,
         vehicles=[v for v in routes if len(v.deliveries)],
     )
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    parser = ArgumentParser()
-
-    parser.add_argument("--instance", type=str, required=True)
-    parser.add_argument("--output", type=str)
-    parser.add_argument("--params", type=str)
-
-    args = parser.parse_args()
-
-    instance = CVRPInstance.from_file(args.instance)
-    params = ORToolsParams.from_file(args.params) if args.params else None
-
-    # Run solver.
-    solution = solve_cvrp(instance, params)
-    solution.to_file(args.output or "result.json")

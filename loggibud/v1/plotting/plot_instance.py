@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 import numpy as np
 import folium
 
-from .types import CVRPInstance, CVRPSolution
+from .types import CVRPInstance
 from ..shared.types import DeliveryProblemInstance
 
 

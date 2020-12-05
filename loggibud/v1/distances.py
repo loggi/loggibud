@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Iterable, Optional
 
 import requests
@@ -13,7 +13,9 @@ class OSRMConfig:
     timeout_s: int = 600
 
 
-def calculate_distance_matrix_m(points: Iterable[Point], config: Optional[OSRMConfig] = None):
+def calculate_distance_matrix_m(
+    points: Iterable[Point], config: Optional[OSRMConfig] = None
+):
     config = config or OSRMConfig()
 
     if len(points) < 2:
@@ -31,7 +33,9 @@ def calculate_distance_matrix_m(points: Iterable[Point], config: Optional[OSRMCo
     return np.array(response.json()["distances"])
 
 
-def calculate_route_distance_m(points: Iterable[Point], config: Optional[OSRMConfig] = None):
+def calculate_route_distance_m(
+    points: Iterable[Point], config: Optional[OSRMConfig] = None
+):
     config = config or OSRMConfig()
 
     if len(points) < 2:

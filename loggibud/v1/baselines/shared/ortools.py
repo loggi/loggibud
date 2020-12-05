@@ -43,7 +43,7 @@ class ORToolsParams(JSONDataclassMixin):
         )
 
 
-def solve_cvrp(
+def solve(
     instance: CVRPInstance,
     params: Optional[ORToolsParams] = None,
 ) -> Optional[CVRPSolution]:

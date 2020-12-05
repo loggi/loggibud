@@ -249,7 +249,7 @@ def generate_cvrp_subinstances(
 
         return [
             CVRPInstance(
-                name=f"{instance.name}-cvrp-{idx}",
+                name=f"cvrp-{idx}-{instance.name}",
                 origin=hub,
                 deliveries=deliveries,
                 vehicle_capacity=config.vehicle_capacity,

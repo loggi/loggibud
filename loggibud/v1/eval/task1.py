@@ -15,6 +15,10 @@ def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
     max_capacity = max(sum(d.size for d in v.deliveries) for v in solution.vehicles)
     assert max_capacity <= instance.vehicle_capacity
 
+    # Check if maximum number of origins is consistent.
+    origins = set([v.origin for v in solution.vehicles])
+    assert len(origins) <= 1
+
     route_distances_m = [
         calculate_route_distance_m(v.circuit) for v in solution.vehicles
     ]

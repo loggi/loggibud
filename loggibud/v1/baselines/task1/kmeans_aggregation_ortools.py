@@ -22,7 +22,7 @@ import numpy as np
 from sklearn.cluster import MiniBatchKMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery
-from ..shared.ortools import solve_cvrp as ortools_solve_cvrp, ORToolsParams
+from ..shared.ortools import solve_cvrp as ortools_solve, ORToolsParams
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class KmeansAggregateORToolsParams:
         )
 
 
-def solve_cvrp(
+def solve(
     instance: CVRPInstance,
     params: Optional[KmeansAggregateORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
@@ -115,7 +115,7 @@ def solve_cvrp(
         vehicle_capacity=instance.vehicle_capacity,
     )
 
-    aggregated_solution = ortools_solve_cvrp(aggregated_instance)
+    aggregated_solution = ortools_solve(aggregated_instance)
 
     vehicles = [
         CVRPSolutionVehicle(

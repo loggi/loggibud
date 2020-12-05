@@ -22,7 +22,7 @@ from sklearn.cluster import KMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution
 from loggibud.v1.baselines.shared.ortools import (
-    solve_cvrp as ortools_solve_cvrp,
+    solve as ortools_solve,
     ORToolsParams,
 )
 
@@ -49,7 +49,7 @@ class KmeansPartitionORToolsParams:
         )
 
 
-def solve_cvrp(
+def solve(
     instance: CVRPInstance,
     params: Optional[KmeansPartitionORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
@@ -85,7 +85,7 @@ def solve_cvrp(
     ]
 
     subsolutions = [
-        ortools_solve_cvrp(subinstance, params.ortools_params)
+        ortools_solve(subinstance, params.ortools_params)
         for subinstance in subinstances
     ]
 

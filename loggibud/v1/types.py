@@ -73,3 +73,7 @@ class CVRPSolutionVehicle:
 class CVRPSolution(JSONDataclassMixin):
     name: str
     vehicles: List[CVRPSolutionVehicle]
+
+    @property
+    def deliveries(self):
+        return [d for v in self.vehicles for d in v.deliveries]

@@ -22,7 +22,6 @@ While our goal is to solve the problem on an end-to-end manner, we also provide 
   <img src="./figures/cvrp_example_4.png" width="400" />
 </p>
 
-
 # Tasks
 
 ### Task 1 - Last-Mile Capacitated Vehicle Routing Problem
@@ -92,12 +91,15 @@ This repository is not an official Loggi product. Use it at your own risk under 
 # WIP
 
 ```
-python -m loggibud.cvrp.baselines.ortools1 \
-	--instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json
+python -m loggibud.v1.baselines.run_task1 \
+    --module loggibud.v1.baselines.task1.kmeans_partition_ortools \
+    --method solve_cvrp \
+    --instances data/cvrp-instances-1.0/dev/rj-90-cvrp-0.json \
+    --output results/
 
-python -m loggibud.cvrp.eval \
+python -m loggibud.v1.eval.task1 \
 	--instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
-	--solution result.json
+	--solution results/rj-0-cvrp-0.json
 ```
 
 

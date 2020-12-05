@@ -11,9 +11,8 @@ Refs:
 Vehicle Routing Problem," 2009 Third International Symposium on Intelligent Information Technology 
 Application, Shanghai, 2009, pp. 87-90, doi: 10.1109/IITA.2009.307. Available at 
 https://ieeexplore.ieee.org/abstract/document/5369502.
-
-
 """
+
 import logging
 import json
 import os
@@ -102,35 +101,3 @@ def solve_cvrp(
         name=instance.name,
         vehicles=[v for sol in subsolutions for v in sol.vehicles],
     )
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    parser = ArgumentParser()
-
-    parser.add_argument("--instances", type=str, required=True)
-    parser.add_argument("--output", type=str)
-    parser.add_argument("--params", type=str)
-
-    args = parser.parse_args()
-
-    # Load instance and heuristic params.
-    path = Path(args.instances)
-    path_dir = path if path.is_dir() else path.parent
-    files = [path] if path.is_file() else list(path.iterdir())
-
-    params = (
-        KmeansPartitionORToolsParams.from_file(args.params) if args.params else None
-    )
-
-    output_dir = Path(args.output or ".")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    def solve(file):
-        instance = CVRPInstance.from_file(file)
-        solution = solve_cvrp(instance, params)
-        solution.to_file(output_dir / f"{instance.name}.json")
-
-    # Run solver on multiprocessing pool.
-    with Pool(8 or os.cpu_count()) as pool:
-        list(tqdm(pool.imap(solve, files), total=len(files)))

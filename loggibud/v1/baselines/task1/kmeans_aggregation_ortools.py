@@ -146,24 +146,3 @@ def solve_cvrp(
         name=instance.name,
         vehicles=vehicles,
     )
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    parser = ArgumentParser()
-
-    parser.add_argument("--instance", type=str, required=True)
-    parser.add_argument("--output", type=str)
-    parser.add_argument("--params", type=str)
-
-    args = parser.parse_args()
-
-    # Load instance and heuristic params.
-    instance = CVRPInstance.from_file(args.instance)
-    params = (
-        KmeansAggregateORToolsParams.from_file(args.params) if args.params else None
-    )
-
-    # Run solver.
-    solution = solve_cvrp(instance, params)
-    solution.to_file(args.output or "result.json")

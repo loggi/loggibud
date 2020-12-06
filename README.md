@@ -1,11 +1,22 @@
 Loggi Benchmark for Urban Deliveries (BUD)
 ==================
 
-The Loggi Benchmark for Urban Deliveries contains datasets and benchmark scripts for large-scale problems in some of Brazil's largest cities. The data is from public sources that have a high correlation with actual last-mile deliveries performed by Loggi.
+The Loggi Benchmark for Urban Deliveries contains datasets and benchmark
+scripts for large-scale problems using as a testbed some of Brazil's largest
+cities. The data is synthesized completely from public sources and
+representative of the challenges we face on real world deliveries for the
+problems outlined in the repository.
 
 # Dataset
 
-The dataset illustrates the challange of a large delivery company in the last-mile step of the supply chain. On Rio de Janeiro metropolitan area alone, every day tens of thousands of parcels and mail are delivered. Deliveries in the city are very unevenly distributed. Rich and densily populated areas drive most of the deliveries. We also do consider the geography of the city and real street travel distances, as the reality of complex cities is not well modelled by euclidian distances.
+The dataset simulates the challange of a large delivery company in the
+last-mile step of the supply chain. Worldwide, metropolitan areas like Rio de
+Janeiro witness the delivery of tens or even hundreds of thousands of parcels
+and mail.  Deliveries on those areas are unexpectedly very unevenly
+distributed. Rich and densily populated areas drive most of the deliveries.
+Besides economic factors, our data also do consider the geography of the
+represented locations and real street travel distances, as the reality of
+complex cities is not well modelled by euclidian distances.
 
 On our first version, We provide 90 train instances and 30 evaluation instances for the end-to-end problem on Rio de Janeiro. The instance sizes range from 24k to 32k deliveries. The challenge is to position consolidation hubs across the city and split demands into delivery vehicles. 
 

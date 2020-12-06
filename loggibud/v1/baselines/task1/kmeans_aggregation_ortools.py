@@ -84,7 +84,7 @@ def solve(
             vehicle_capacity=instance.vehicle_capacity,
         )
 
-        cluster_solution = ortools_solve_cvrp(
+        cluster_solution = ortools_solve(
             cluster_instance, params.cluster_ortools_params
         )
 

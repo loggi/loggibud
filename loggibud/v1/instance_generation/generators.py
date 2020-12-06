@@ -91,7 +91,7 @@ def generate_deliveries(
             if polygon.contains(p):
                 return Delivery(
                     id=uuid.uuid4().hex,
-                    point=Point.from_shapely(p),
+                    point=Point(p.x, p.y),
                     size=random.randint(1, max_size),
                 )
 

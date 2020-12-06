@@ -7,14 +7,20 @@ from dacite import from_dict
 
 
 class JSONDataclassMixin:
+    """Mixin for adding JSON file capabilities to Python dataclasses."""
+
     @classmethod
     def from_file(cls, path: Union[Path, str]) -> "JSONDataclassMixin":
+        """Load dataclass instance from provided file path."""
+
         with open(path) as f:
             data = json.load(f)
 
         return from_dict(cls, data)
 
     def to_file(self, path: Union[Path, str]) -> None:
+        """Save dataclass instance to provided file path."""
+
         with open(path, "w") as f:
             json.dump(asdict(self), f)
 
@@ -23,19 +29,27 @@ class JSONDataclassMixin:
 
 @dataclass(unsafe_hash=True)
 class Point:
-    lng: float
-    lat: float
+    """Point in earth. Assumes a geodesical projection."""
 
-    @classmethod
-    def from_shapely(cls, p):
-        return cls(p.x, p.y)
+    lng: float
+    """Longitude (x axis)."""
+
+    lat: float
+    """Latitude (y axis)."""
 
 
 @dataclass(unsafe_hash=True)
 class Delivery:
+    """A delivery request."""
+
     id: str
+    """Unique id."""
+
     point: Point
+    """Delivery location."""
+
     size: int
+    """Size it occupies in the vehicle (considered 1-D for simplicity)."""
 
 
 @dataclass
@@ -67,6 +81,10 @@ class CVRPSolutionVehicle:
     @property
     def circuit(self) -> List[Point]:
         return [self.origin] + [d.point for d in self.deliveries] + [self.origin]
+
+    @property
+    def occupation(self) -> int:
+        return sum([d.size for d in self.deliveries])
 
 
 @dataclass

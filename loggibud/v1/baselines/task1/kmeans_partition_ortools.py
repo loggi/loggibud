@@ -43,7 +43,7 @@ class KmeansPartitionORToolsParams:
         return cls(
             variable_num_clusters=500,
             ortools_params=ORToolsParams(
-                time_limit_ms=600_000,
+                time_limit_ms=120_000,
                 solution_limit=1_000,
             ),
         )

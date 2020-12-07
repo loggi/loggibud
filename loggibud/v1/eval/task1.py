@@ -5,7 +5,7 @@ from ..distances import calculate_route_distance_m
 from ..types import CVRPInstance, CVRPSolution
 
 
-def evaluate_cvrp_solution(instance: CVRPInstance, solution: CVRPSolution):
+def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
 
     # Check if all demands are present.
     solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     stems = instances.keys()
 
     results = [
-        evaluate_cvrp_solution(instances[stem], solutions[stem]) for stem in stems
+        evaluate_solution(instances[stem], solutions[stem]) for stem in stems
     ]
 
     print(sum(results))

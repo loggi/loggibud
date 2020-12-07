@@ -1,4 +1,5 @@
-Loggi Benchmark for Urban Deliveries (BUD) ==================
+Loggi Benchmark for Urban Deliveries (BUD) 
+==================
 
 The Loggi Benchmark for Urban Deliveries contains datasets and benchmark
 scripts for large-scale problems using as a testbed some of Brazil's largest
@@ -130,31 +131,7 @@ If you use this data in academic work, please cite our paper.
 Coming soon.
 ```
 
-# Acknowledgments
-
-[]
-
 # Disclaimer
 
 This repository is not an official Loggi product. Use it at your own risk under
 the terms of the MIT license.
-
-# WIP
-
-```
-python -m loggibud.v1.baselines.run_task1 \
-    --module loggibud.v1.baselines.task1.kmeans_partition_ortools \
-    --method solve_cvrp \
-    --instances data/cvrp-instances-1.0/dev/rj-90-cvrp-0.json \
-    --output results/
-
-python -m loggibud.v1.eval.task1 \
-	--instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
-	--solution results/rj-0-cvrp-0.json
-```
-
-
-| Submission | Date       | Submitted by             | Solution                            | Distance (km)       |
-| ---------- | -----------| ------------------------ | ----------------------------------- | ------------------- |
-| ortools1   | 2020/11/28 | Loggi - Network design   | OR-tools VRP \[[code](.)\]          | 10000.000           |
-| kmortools1 | 2020/11/28 | Loggi - Network design   | KMeans + OR-tools VRP \[[code](.)\] | 10000.000           |

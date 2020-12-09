@@ -4,7 +4,6 @@ import random
 import itertools
 import json
 import logging
-import uuid
 from pathlib import Path
 from collections import Counter
 from dataclasses import dataclass, asdict
@@ -27,6 +26,10 @@ from .preprocessing import prepare_census_data
 # (can use tqdm_gui, optional kwargs, etc.)
 tqdm.pandas()
 logger = logging.getLogger(__name__)
+
+
+def new_id():
+    return format(random.getrandbits(128), "x")
 
 
 @dataclass
@@ -90,7 +93,7 @@ def generate_deliveries(
             # If is contained, return.
             if polygon.contains(p):
                 return Delivery(
-                    id=uuid.uuid4().hex,
+                    id=new_id(),
                     point=Point(p.x, p.y),
                     size=random.randint(1, max_size),
                 )
@@ -109,6 +112,7 @@ def generate_census_instances(
     config: DeliveryGenerationConfig,
 ) -> CensusGenerationResult:
     np.random.seed(config.seed)
+    random.seed(config.seed)
 
     logger.info(f"Starting census instance generation for {config.name}.")
 
@@ -177,6 +181,7 @@ def generate_cvrp_subinstances(
 ):
     logger.info(f"Starting CVRP subinstance generation for {config.name}.")
     np.random.seed(config.seed)
+    random.seed(config.seed)
 
     # Merge all train instance deliveries.
     logger.info("Starting region clustering.")

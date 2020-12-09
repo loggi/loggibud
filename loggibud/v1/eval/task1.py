@@ -60,8 +60,6 @@ if __name__ == "__main__":
 
     stems = instances.keys()
 
-    results = [
-        evaluate_solution(instances[stem], solutions[stem]) for stem in stems
-    ]
+    results = [evaluate_solution(instances[stem], solutions[stem]) for stem in stems]
 
     print(sum(results))

@@ -1,7 +1,7 @@
 Instance generation
 ===================
 
-This document describes how the data from our instances is sythesized from public sources.
+This document describes how the data from our instances is synthesized from public data.
 The sources of information are IBGE, IPEA, and OpenStreetMaps.
 
 

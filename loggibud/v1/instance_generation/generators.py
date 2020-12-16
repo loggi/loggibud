@@ -101,7 +101,7 @@ def generate_deliveries(
     region_samples = tract_df.progress_apply(
         lambda r: [
             new_point(r.geometry)
-            for i in range(int(r.total_income * revenue_income_ratio))
+            for i in range(max(1, int(r.total_income * revenue_income_ratio)))
         ],
         axis=1,
     )
@@ -141,6 +141,7 @@ def generate_census_instances(
     instances = [
         DeliveryProblemInstance(
             name=f"{config.name}-{i}",
+            region=config.name,
             deliveries=np.random.choice(deliveries, size=size).tolist(),
             vehicle_capacity=config.vehicle_capacity,
             max_hubs=config.max_hubs,
@@ -159,12 +160,11 @@ def generate_census_instances(
             ("train", train_instances),
             ("dev", dev_instances),
         ):
-            path = Path(f"{config.save_to}/{prefix}/").mkdir(
-                parents=True, exist_ok=True
-            )
+            dir_path = Path(f"{config.save_to}/{prefix}/{config.name}")
+            dir_path.mkdir(parents=True, exist_ok=True)
 
             for instance in instances_subset:
-                path = Path(f"{config.save_to}/{prefix}/{instance.name}.json")
+                path = Path(dir_path / f"{instance.name}.json")
                 with path.open("w") as file:
                     json.dump(asdict(instance), file)
 
@@ -255,6 +255,7 @@ def generate_cvrp_subinstances(
         return [
             CVRPInstance(
                 name=f"cvrp-{idx}-{instance.name}",
+                region=f"{config.name}-{idx}",
                 origin=hub,
                 deliveries=deliveries,
                 vehicle_capacity=config.vehicle_capacity,
@@ -283,12 +284,11 @@ def generate_cvrp_subinstances(
             ("train", train_subinstances),
             ("dev", dev_subinstances),
         ):
-            path = Path(f"{config.save_to}/{prefix}/").mkdir(
-                parents=True, exist_ok=True
-            )
 
             for instance in instances_subset:
-                path = Path(f"{config.save_to}/{prefix}/{instance.name}.json")
+                dir_path = Path(f"{config.save_to}/{prefix}/{instance.region}")
+                dir_path.mkdir(parents=True, exist_ok=True)
+                path = Path(dir_path / f"{instance.name}.json")
                 with path.open("w") as file:
                     json.dump(asdict(instance), file)
 

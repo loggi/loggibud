@@ -9,10 +9,16 @@ BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 CENSUS_INCOME_FILES = {
     "rj": f"{BASE_PATH}/../../../data_raw/RJ/Base informaçoes setores2010 universo RJ/CSV/DomicilioRenda_RJ.csv",
+
+    # Note that there's a bug on DF file name.
+    "df": f"{BASE_PATH}/../../../data_raw/DF/Base informaЗoes setores2010 universo DF/CSV/DomicilioRenda_DF.csv",
+    "pa": f"{BASE_PATH}/../../../data_raw/PA/Base informaçoes setores2010 universo PA/CSV/DomicilioRenda_PA.csv",
 }
 
 CENSUS_POLYGON_FILES = {
     "rj": f"{BASE_PATH}/../../../data_raw/33.gpkg",
+    "df": f"{BASE_PATH}/../../../data_raw/53.gpkg",
+    "pa": f"{BASE_PATH}/../../../data_raw/15.gpkg",
 }
 
 MUNICIPALITIES = {
@@ -29,15 +35,30 @@ MUNICIPALITIES = {
         "são joão de meriti",
         "mesquita",
     },
+    "df": {
+        "brasília",
+    },
+    "pa": {
+        "belém",
+        "ananindeua",
+        "benevides",
+        "castanhal",
+        "marituba",
+        "santa bárbara do pará",
+        "santa isabel do pará",
+    },
 }
 
 INSTANCE_UF = {
     "rj": "rj",
+    "df": "df",
+    "pa": "pa",
 }
 
 
 def load_income_per_sector(uf):
     def int_or_zero(s):
+        # There are a few occurrences of "X" in some numerical columns.
         try:
             return int(s)
         except ValueError:

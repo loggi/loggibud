@@ -55,25 +55,44 @@ class Delivery:
 @dataclass
 class DeliveryProblemInstance(JSONDataclassMixin):
     name: str
-    deliveries: List[Delivery]
-    vehicle_capacity: int
+    """Unique name of this instance."""
+
+    region: str
+    """Region name."""
+
     max_hubs: int
+    """Maximum number of hubs allowed in the solution."""
+
+    vehicle_capacity: int
+    """Maximum sum of sizes per vehicle allowed in the solution."""
+
+    deliveries: List[Delivery]
+    """List of deliveries to be solved."""
 
 
 @dataclass
 class CVRPInstance(JSONDataclassMixin):
     name: str
+    """Unique name of this instance."""
+
+    region: str
+    """Region name."""
 
     origin: Point
-    deliveries: List[Delivery]
+    """Location of the origin hub."""
 
     vehicle_capacity: int
+    """Maximum sum of sizes per vehicle allowed in the solution."""
+
+    deliveries: List[Delivery]
+    """List of deliveries to be solved."""
 
 
 @dataclass
 class CVRPSolutionVehicle:
 
     origin: Point
+    """Location of the origin hub."""
 
     deliveries: List[Delivery]
     """Ordered list of deliveries from the vehicle."""

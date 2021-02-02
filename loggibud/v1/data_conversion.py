@@ -33,7 +33,7 @@ def to_tsplib(
     # Header information
     tspfile = (
         f"NAME : {instance.name}\n"
-        "TYPE : CVRP\n"
+        "TYPE : ACVRP\n"
         f"DIMENSION : {len(instance.deliveries) + 1}\n"  # + 1 for the origin
         f"CAPACITY : {instance.vehicle_capacity}\n"
         "NODE_COORD_TYPE : TWOD_COORDS\n"
@@ -63,7 +63,7 @@ def to_tsplib(
     )
     tspfile += "\n"
 
-    # Depot section: ensure node 0 is the depot (-1 to terminate the list)
+    # Depot section: ensure node 1 is the depot (-1 to terminate the list)
     tspfile += (
         "DEPOT_SECTION\n"
         "1\n"

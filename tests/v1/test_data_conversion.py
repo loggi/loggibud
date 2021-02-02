@@ -19,5 +19,5 @@ def test_can_create_proper_tsplib_from_instance(toy_cvrp_instance):
     tspfile = data_conversion.to_tsplib(toy_cvrp_instance)
 
     assert toy_cvrp_instance.name in tspfile
-    assert "CVRP" in tspfile
+    assert "ACVRP" in tspfile
     assert str(toy_cvrp_instance.vehicle_capacity) in tspfile

@@ -103,7 +103,7 @@ def solve_lkh(instance: CVRPInstance, params: LKHParams) -> None:
 
     arguments = ("./loggibud/v1/baselines/task1/LKH", params.input_par_file)
     popen = subprocess.Popen(arguments, stdout=subprocess.PIPE)
-    popen.wait()  # run the solver in the background and generate output files
+    popen.wait()  # run the solver in the background
 
 
 def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
@@ -142,8 +142,9 @@ def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
         1. Read all output lines until the `TOUR_SECTION` begins;
         2. Read the nodes, converting each node larger than the number of
         locations into 1 until we reach a -1.
-        3. The final string would be "1231456". Then, split this string using
-        "1", which would give the final routes.
+        3. The final list would be [1, 2, 3, 1, 4, 5, 6]. Then, split this
+        list into subgroups with respect to the DEPOT_NODE 1, such as
+        [2, 3], [4, 5, 6]. These will be the nodes of final routes.
     """
 
     num_locations = len(instance.deliveries) + 1

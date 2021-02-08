@@ -25,10 +25,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class LKHParams(JSONDataclassMixin):
+    # We need temporary file to interact with the LKH-3 C solver
+    # This has parameters of the problem and it has the TSPLIB format
     input_vrp_file: str = "vrp_input_temp.vrp"
+
+    # This file has parameters of the solver, as described in [1]
     input_par_file: str = "vrp_input_temp.par"
+
+    # This file is the output file, which contains the output routes
     output_tour_file: str = "vrp_output_temp.vrp"
+
+    # Time limit in seconds to step the solver
     time_limit_s: int = 60
+
+    # Number of runs (as in a multistart heuristic)
     num_runs: int = 1
 
 

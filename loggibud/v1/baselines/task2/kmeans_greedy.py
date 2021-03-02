@@ -129,6 +129,7 @@ def finish(instance: CVRPInstance, model: KMeansGreedyModel) -> CVRPSolution:
     subinstances = [
         CVRPInstance(
             name="",
+            region="",
             deliveries=vehicle.deliveries,
             origin=vehicle.origin,
             vehicle_capacity=3 * instance.vehicle_capacity,  # More relaxed.

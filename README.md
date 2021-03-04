@@ -115,7 +115,7 @@ We also have some baselines on this repository. If you want to include your
 code as a baseline, we'll be happy to revise it.
 
 Don't forget to acknowledge the literature and code you have used on your
-solution. Use the acknowledgments section for that.
+solution.
 
 # Instance generation pipeline
 

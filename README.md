@@ -7,6 +7,9 @@ cities. The data is synthesized completely from public sources and
 representative of the challenges we face on real world deliveries for the
 problems outlined in the repository.
 
+To get started with the development using LoggiBUD, check out our 
+[quickstart tutorial](./docs/quickstart.md).
+
 # Dataset
 
 The dataset simulates the challange of a large delivery company in the
@@ -63,11 +66,6 @@ Therefore, locations and allocation of requests to dispatch locations is
 considered part of the solution, but should be the same accross multiple
 instances. This can be considered an end-to-end optimization of last-mile
 delivery operations.
-
-# Getting Started
-
-To get started with the development using LoggiBUD, check out our 
-[quickstart tutorial](./docs/quickstart.md).
 
 # Motivation
 

@@ -3,7 +3,7 @@
 
 ## Dataset
 
-The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Alternativelly, you can run the generation pipeline yourself using the [generation pipeline](./loggibud/v1/instance_generation/README.md)
+The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Alternativelly, you can run the generation pipeline yourself using the [generation pipeline](./loggibud/v1/instance_generation/README.md).
 
 ## OSRM Server
 

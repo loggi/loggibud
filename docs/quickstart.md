@@ -3,7 +3,9 @@
 
 ## Dataset
 
-The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Alternativelly, you can generate the instances yourself from public data using the [generation pipeline](./loggibud/v1/instance_generation/README.md).
+The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Make sure you unzip the dataset into the data file. It should contain two directories named `cvrp-instances-1.0` and `delivery-instances-1.0`.
+
+Alternativelly, you can generate the instances yourself from public data using the [generation pipeline](./loggibud/v1/instance_generation/README.md).
 
 ## OSRM Server
 

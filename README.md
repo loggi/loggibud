@@ -129,10 +129,17 @@ provided instances.
 
 # Citing this work
 
-If you use this data in academic work, please cite our paper.
+If you use this data in academic work, please cite our repository. A full paper
+describing it should be available soon.
 
-```
-Coming soon.
+```@misc{Charles2013,
+  author = {Loggi},
+  title = {loggiBUD: Loggi Benchmark for Urban Deliveries},
+  year = {2021},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/loggi/loggibud}}
+}
 ```
 
 # Disclaimer

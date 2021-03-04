@@ -1,6 +1,10 @@
 
 # Getting started
 
+## Dataset
+
+The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Alternativelly, you can run the generation pipeline yourself using the [generation pipeline](./loggibud/v1/instance_generation/README.md)
+
 ## OSRM Server
 
 To correctly evaluate distances, you should use OpenStreetMaps distances provided by the OSRM server. Our recommended way of running OSRM is Docker. To run it, please follow these steps.
@@ -152,9 +156,3 @@ python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
 ```
-
-
-| Submission | Date       | Submitted by             | Solution                            | Distance (km)       |
-| ---------- | -----------| ------------------------ | ----------------------------------- | ------------------- |
-| ortools1   | 2020/11/28 | Loggi - Network design   | OR-tools VRP \[[code](.)\]          | 10000.000           |
-| kmortools1 | 2020/11/28 | Loggi - Network design   | KMeans + OR-tools VRP \[[code](.)\] | 10000.000           |

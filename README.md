@@ -26,8 +26,8 @@ consolidation hubs across the city and split demands into delivery vehicles.
 <p float="center"> <img src="./figures/e2e_example.png" width="820" /> </p>
 
 While our goal is to solve the problem on an end-to-end manner, we also provide
-a baseline distribution of demands into 6 hubs obtained using a p-hub
-assignment. This leads to 540 train instances and 180 evaluation instances on
+a baseline distribution of demands into 11 hubs obtained using a p-hub
+assignment. This leads to 990 train instances and 330 evaluation instances on
 the CVRP challenge.
 
 <p float="center"> <img src="./figures/cvrp_example_1.png" width="400" /> <img

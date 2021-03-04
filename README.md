@@ -64,6 +64,11 @@ considered part of the solution, but should be the same accross multiple
 instances. This can be considered an end-to-end optimization of last-mile
 delivery operations.
 
+# Getting Started
+
+To get started with the development using LoggiBUD, check out our 
+[quickstart tutorial](./docs/quickstart.md).
+
 # Motivation
 
 This benchmark is an effort to make new operations research solutions closer to
@@ -103,8 +108,7 @@ your submission.
 # How to submit
 
 To include your method to the benchmark leaderboards, you must submit the
-solution data into a pull request. Please check our submission guidelines for
-more information.
+solution data into a pull request.
 
 While submitting the code is not required, we strongly suggest making your
 research code available to make reproducing the results more accessible. You

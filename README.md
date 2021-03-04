@@ -19,9 +19,9 @@ represented locations and real street travel distances, as the reality of
 complex cities is not well modelled by euclidian distances.
 
 On our first version, We provide 90 train instances and 30 evaluation instances
-for the end-to-end problem on Rio de Janeiro. The instance sizes range from 24k
-to 32k deliveries. The challenge is to position consolidation hubs across the
-city and split demands into delivery vehicles. 
+for the end-to-end problem on Rio de Janeiro (RJ), Brasília (DF) and Belém (PA).
+The instance sizes range from 7k to 32k deliveries. The challenge is to position
+consolidation hubs across the city and split demands into delivery vehicles. 
 
 <p float="center"> <img src="./figures/e2e_example.png" width="820" /> </p>
 

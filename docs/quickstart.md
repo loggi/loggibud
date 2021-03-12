@@ -5,7 +5,7 @@
 
 The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Make sure you unzip the dataset into the data file. It should contain two directories named `cvrp-instances-1.0` and `delivery-instances-1.0`.
 
-Alternativelly, you can generate the instances yourself from public data using the [generation pipeline](./loggibud/v1/instance_generation/README.md).
+Alternativelly, you can generate the instances yourself from public data using the [generation pipeline](../loggibud/v1/instance_generation/README.md).
 
 ## OSRM Server
 
@@ -24,7 +24,7 @@ docker run --rm -t -id \
   osrm/osrm-backend osrm-routed --algorithm ch /data/brazil-201110.osrm --max-table-size 10000
 ```
 
-For more information, check our [OSRM detailed documentation](./docs/osrm.md).
+For more information, check our [OSRM detailed documentation](./osrm.md).
 
 ## Python API
 

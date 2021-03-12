@@ -1,6 +1,10 @@
 
 # Getting started
 
+## Contact information
+
+If you have any issues during development, you can contact our team using github issues, or alternativelly through bud@loggi.com.
+
 ## Dataset
 
 The full dataset is available to [download here](https://loggibud.s3.amazonaws.com/dataset.zip). Make sure you unzip the dataset into the data file. It should contain two directories named `cvrp-instances-1.0` and `delivery-instances-1.0`.
@@ -157,4 +161,6 @@ python -m loggibud.v1.baselines.run_task1 \
 python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
+    
+    
 ```

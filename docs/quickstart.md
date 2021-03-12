@@ -112,30 +112,27 @@ If you don't use Python, you should implement your own IO functions. The JSON sc
 {
   // Name of the specific instance.
   "name": "rj-0-cvrp-0",
-
-  // Hub coordinates, where the vehicles originate.
-  "origin": {
-    "lng": -42.0,
-    "lat": -23.0
-  },
-
-  // The capacity (sum of sizes) of every vehicle.
-  "vehicle_capacity": 120,
-
-  // The deliveries that should be routed.
-  "deliveries": [
+  
+  // Solution vehicles.
+  "vehicles": [
     {
-      // Unique delivery id.
-      "id": "4943245fb66541edaf54f4e3aaed188a",
-      
-      // Delivery destination coordinates.
-      "point": {
-        "lng": -43.12589115884953, 
-        "lat": -22.89585186478512
-      },
-
-      // Size of the delivery.
-      "size": 2
+      // Vehicle origin (should be the same on CVRP solutions).
+      "origin": {
+        "lng": -43.374124642209765, 
+        "lat": -22.790683484127058
+      }, 
+      // List of deliveries in the vehicle.
+      "deliveries": [
+        {
+          "id": "54b10d6d-2ef7-4a69-a9f7-e454f81cdfd2",
+          "point": {
+            "lng": -43.44893966650845, 
+            "lat": -22.742762573031424
+          },
+          "size": 8
+        }
+        // ...
+      ]
     }
     // ...
   ]
@@ -148,19 +145,4 @@ If you don't use Python, you should implement your own IO functions. The JSON sc
 python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
-```
-# WIP
-
-```
-python -m loggibud.v1.baselines.run_task1 \
-    --module loggibud.v1.baselines.task1.kmeans_partition_ortools \
-    --method solve \
-    --instances data/cvrp-instances-1.0/dev/rj-90-cvrp-0.json \
-    --output results/
-
-python -m loggibud.v1.eval.task1 \
-    --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
-    --solution results/rj-0-cvrp-0.json
-    
-    
 ```

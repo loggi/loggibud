@@ -101,3 +101,12 @@ def calculate_distance_matrix_great_circle_m(
     )
 
     return EARTH_RADIUS_METERS * delta_sigma
+
+
+def calculate_route_distance_great_circle_m(points: Iterable[Point]) -> float:
+    """Compute total distance from moving from starting point to final
+    """
+
+    distance_matrix = calculate_distance_matrix_great_circle_m(points)
+
+    import ipdb; ipdb.set_trace()

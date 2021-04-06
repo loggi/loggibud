@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class KmeansGreedyParams:
+class KMeansGreedyParams:
     fixed_num_clusters: Optional[int] = None
     variable_num_clusters: Optional[int] = None
     seed: int = 0
@@ -45,16 +45,16 @@ class KmeansGreedyParams:
 
 @dataclass
 class KMeansGreedyModel:
-    params: KmeansGreedyParams
+    params: KMeansGreedyParams
     clustering: KMeans
     subinstance: Optional[CVRPInstance] = None
     cluster_subsolutions: Optional[Dict[int, List[CVRPSolutionVehicle]]] = None
 
 
 def pretrain(
-    instances: List[CVRPInstance], params: Optional[KmeansGreedyParams] = None
+    instances: List[CVRPInstance], params: Optional[KMeansGreedyParams] = None
 ) -> KMeansGreedyModel:
-    params = params or KmeansGreedyParams.get_baseline()
+    params = params or KMeansGreedyParams.get_baseline()
 
     points = np.array(
         [
@@ -148,6 +148,20 @@ def finish(instance: CVRPInstance, model: KMeansGreedyModel) -> CVRPSolution:
         name=instance.name,
         vehicles=[v for subsolution in subsolutions for v in subsolution.vehicles],
     )
+
+
+def solve_instance(
+    model: KMeansGreedyModel, instance: CVRPInstance
+) -> CVRPSolution:
+    """Solve an instance dinamically using a solver model"""
+    logger.info("Finetunning on evaluation instance.")
+    model_finetuned = finetune(model, instance)
+
+    logger.info("Starting to dynamic route.")
+    for delivery in tqdm(instance.deliveries):
+        model_finetuned = route(model_finetuned, delivery)
+
+    return finish(instance, model_finetuned)
 
 
 if __name__ == "__main__":

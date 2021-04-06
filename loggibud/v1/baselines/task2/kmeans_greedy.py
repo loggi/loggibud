@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class KmeansGreedyParams:
+class KMeansGreedyParams:
     fixed_num_clusters: Optional[int] = None
     variable_num_clusters: Optional[int] = None
     seed: int = 0
@@ -45,16 +45,16 @@ class KmeansGreedyParams:
 
 @dataclass
 class KMeansGreedyModel:
-    params: KmeansGreedyParams
+    params: KMeansGreedyParams
     clustering: KMeans
     subinstance: Optional[CVRPInstance] = None
     cluster_subsolutions: Optional[Dict[int, List[CVRPSolutionVehicle]]] = None
 
 
 def pretrain(
-    instances: List[CVRPInstance], params: Optional[KmeansGreedyParams] = None
+    instances: List[CVRPInstance], params: Optional[KMeansGreedyParams] = None
 ) -> KMeansGreedyModel:
-    params = params or KmeansGreedyParams.get_baseline()
+    params = params or KMeansGreedyParams.get_baseline()
 
     points = np.array(
         [

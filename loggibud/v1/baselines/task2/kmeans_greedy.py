@@ -150,6 +150,20 @@ def finish(instance: CVRPInstance, model: KMeansGreedyModel) -> CVRPSolution:
     )
 
 
+def solve_instance(
+    model: KMeansGreedyModel, instance: CVRPInstance
+) -> CVRPSolution:
+    """Solve an instance dinamically using a solver model"""
+    logger.info("Finetunning on evaluation instance.")
+    model_finetuned = finetune(model, instance)
+
+    logger.info("Starting to dynamic route.")
+    for delivery in tqdm(instance.deliveries):
+        model_finetuned = route(model_finetuned, delivery)
+
+    return finish(instance, model_finetuned)
+
+
 if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO)

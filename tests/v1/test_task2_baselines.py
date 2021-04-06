@@ -6,6 +6,7 @@ from mock import patch
 from pathlib import Path
 
 from loggibud.v1.types import CVRPInstance
+from loggibud.v1.baselines.shared.ortools import ORToolsParams
 from loggibud.v1.baselines.task2 import kmeans_greedy, qrp_sweep
 from loggibud.v1.distances import (
     calculate_distance_matrix_great_circle_m,
@@ -69,7 +70,12 @@ def test_kmeans_greedy_solver(
     mocked_osrm_route_distance,
     mocked_ortools_osrm_distance_matrix,
 ):
-    model = kmeans_greedy.pretrain(train_instances)
+    # Limit OR-Tools TSP solver to 100 ms (this is just a test, a good solution
+    # is not required)
+    params = kmeans_greedy.KMeansGreedyParams(
+        ortools_tsp_params=ORToolsParams(time_limit_ms=100)
+    )
+    model = kmeans_greedy.pretrain(train_instances, params=params)
     result = kmeans_greedy.solve_instance(model, dev_instance)
 
     total_distance = evaluate_solution(dev_instance, result)
@@ -83,8 +89,11 @@ def test_qrp_sweep_solver(
     mocked_osrm_route_distance,
     mocked_ortools_osrm_distance_matrix,
 ):
-    # Set num clusters to 150 to match the default in `kmeans_greedy`
-    params = qrp_sweep.QRPParams(num_clusters=150)
+    # Limit OR-Tools TSP solver to 100 ms (this is just a test, a good solution
+    # is not required)
+    params = qrp_sweep.QRPParams(
+        ortools_tsp_params=ORToolsParams(time_limit_ms=100)
+    )
     model = qrp_sweep.pretrain(train_instances, params=params)
     result = qrp_sweep.solve_instance(model, dev_instance)
 

@@ -33,7 +33,7 @@ class ORToolsParams(JSONDataclassMixin):
     ] = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
     max_vehicles: Optional[int] = None
     solution_limit: Optional[int] = None
-    time_limit_ms: Optional[int] = 60_000 * 5
+    time_limit_ms: Optional[int] = 60_000
 
     @classmethod
     def get_baseline(cls):

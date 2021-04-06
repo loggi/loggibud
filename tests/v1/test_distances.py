@@ -33,6 +33,7 @@ def test_great_circle_distance(toy_cvrp_points):
 
 
 def test_great_circle_route_distance(toy_cvrp_points):
-    """
-    """
-    distance_route = calculate_distance_matrix_great_circle_m(toy_cvrp_points)
+    """Ensure the total distance is greater than zero"""
+    route_distance = calculate_route_distance_great_circle_m(toy_cvrp_points)
+
+    assert route_distance > 0

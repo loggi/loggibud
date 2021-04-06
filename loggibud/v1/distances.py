@@ -105,8 +105,24 @@ def calculate_distance_matrix_great_circle_m(
 
 def calculate_route_distance_great_circle_m(points: Iterable[Point]) -> float:
     """Compute total distance from moving from starting point to final
+    The total distance will be from point 0 to 1, from 1 to 2, and so on in
+    the order provided.
+
+    Parameters
+    ----------
+    points
+        Iterable with `lat` and `lng` properties with the coordinates of a
+        delivery
+
+    Returns
+    -------
+    route_distance
+        Total distance from going to the first point to the next until the last
+        one
     """
 
     distance_matrix = calculate_distance_matrix_great_circle_m(points)
 
-    import ipdb; ipdb.set_trace()
+    point_indices = np.arange(len(points))
+
+    return distance_matrix[point_indices[:-1], point_indices[1:]].sum()

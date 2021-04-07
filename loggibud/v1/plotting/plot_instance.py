@@ -31,7 +31,7 @@ def plot_cvrp_instance(instance: CVRPInstance):
         [origin.lat, origin.lng], color="red", radius=3, weight=5
     ).add_to(m)
 
-    m.save("map.html")
+    return m
 
 
 def plot_delivery_instance(instance: DeliveryProblemInstance):
@@ -52,7 +52,7 @@ def plot_delivery_instance(instance: DeliveryProblemInstance):
             [point.lat, point.lng], color="blue", radius=1, weight=1
         ).add_to(m)
 
-    m.save("map.html")
+    return m
 
 
 if __name__ == "__main__":
@@ -67,8 +67,10 @@ if __name__ == "__main__":
 
     if args.cvrp:
         instance = CVRPInstance.from_file(args.cvrp)
-        plot_cvrp_instance(instance)
+        m = plot_cvrp_instance(instance)
 
     elif args.delivery:
         instance = DeliveryProblemInstance.from_file(args.delivery)
-        plot_delivery_instance(instance)
+        m = plot_delivery_instance(instance)
+
+    m.save("map.html")

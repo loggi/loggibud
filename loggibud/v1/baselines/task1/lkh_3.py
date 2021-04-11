@@ -40,7 +40,7 @@ class LKHParams(JSONDataclassMixin):
     output_tour_file: str = "vrp_output_temp.vrp"
 
     # Time limit in seconds to step the solver
-    time_limit_s: int = 60
+    time_limit_s: int = 60 * 5
 
     # Number of runs (as in a multistart heuristic)
     num_runs: int = 1

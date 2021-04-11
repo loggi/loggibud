@@ -1,10 +1,6 @@
-import json
-
 import pytest
-from dacite import from_dict
 from mock import patch
 
-from loggibud.v1.types import CVRPInstance
 from loggibud.v1.baselines.shared import ortools
 from loggibud.v1.baselines.task1 import lkh_3
 from loggibud.v1.distances import (
@@ -12,14 +8,6 @@ from loggibud.v1.distances import (
     calculate_route_distance_great_circle_m,
 )
 from loggibud.v1.eval.task1 import evaluate_solution
-
-
-@pytest.fixture
-def toy_cvrp_instance():
-    with open("tests/results/cvrp-instances/train/rj-0/cvrp-0-rj-0.json") as f:
-        data = json.load(f)
-
-    return from_dict(CVRPInstance, data)
 
 
 @pytest.fixture

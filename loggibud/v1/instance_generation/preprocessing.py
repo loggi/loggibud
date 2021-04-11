@@ -9,9 +9,7 @@ BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 CENSUS_INCOME_FILES = {
     "rj": f"{BASE_PATH}/../../../data_raw/RJ/Base informaçoes setores2010 universo RJ/CSV/DomicilioRenda_RJ.csv",
-
-    # Note that there's a bug on DF file name.
-    "df": f"{BASE_PATH}/../../../data_raw/DF/Base informaЗoes setores2010 universo DF/CSV/DomicilioRenda_DF.csv",
+    "df": f"{BASE_PATH}/../../../data_raw/DF/Base informaçoes setores2010 universo DF/CSV/DomicilioRenda_DF.csv",
     "pa": f"{BASE_PATH}/../../../data_raw/PA/Base informaçoes setores2010 universo PA/CSV/DomicilioRenda_PA.csv",
 }
 

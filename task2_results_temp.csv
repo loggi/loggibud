@@ -1,0 +1,2 @@
+instance_name,instance_size,solver,total_distance,total_time,feasible_solution
+cvrp-0-df-117,778,kmeans_greedy,3770.1033,88.1152454240073,True

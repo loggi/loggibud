@@ -26,3 +26,4 @@ threadpoolctl==2.1.0
 tqdm==4.51.0
 urllib3==1.25.11
 dacite==1.6.0
+mock==4.0.3

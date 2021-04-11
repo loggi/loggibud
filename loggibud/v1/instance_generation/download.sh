@@ -13,3 +13,7 @@ wget -P ./data_raw -nc https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010
 unzip -d ./data_raw -o ./data_raw/RJ_20171016.zip
 unzip -d ./data_raw -o ./data_raw/DF_20171016.zip
 unzip -d ./data_raw -o ./data_raw/PA_20171016.zip
+
+# Fix bug with DF file name
+cd './data_raw/DF'
+find . -maxdepth 1 -mindepth 1 -type d -execdir mv {} 'Base informaçoes setores2010 universo DF' \;

@@ -21,7 +21,7 @@ def train_instances(toy_cvrp_instance):
 
 @pytest.fixture
 def dev_instance():
-    with open("tests/test-instances/cvrp-0-rj-3.json") as f:
+    with open("tests/test_instances/cvrp-0-rj-3.json") as f:
         data = json.load(f)
 
     return from_dict(CVRPInstance, data)

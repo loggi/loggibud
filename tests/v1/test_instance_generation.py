@@ -9,6 +9,10 @@ from loggibud.v1.instance_generation.generators import (
     generate_cvrp_subinstances,
 )
 
+# This test module can actually only be run locally in the presence of the
+# `raw_data` directoy, so it is skipped in Github Actions
+pytest.skip("Skipping tests requiring raw data", allow_module_level=True)
+
 
 @pytest.fixture(params=["rj", "df", "pa"])
 def instance_name(request):

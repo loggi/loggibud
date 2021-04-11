@@ -82,11 +82,11 @@ class QRPModel:
     subinstance: Optional[CVRPInstance] = None
     # Center of all historical packages, used to translate new deliveries and
     # compute their equivalent angles
-    center: np.ndarray
+    center: np.ndarray = np.zeros((0, 2))
     # Angle intervals describing each sub-region. They are described by a
     # `n_cluster` x 2 array with the form
     # [[-pi, angle_1], [angle_1, angle_2], ..., [angle_n, pi]]
-    angle_intervals: np.ndarray
+    angle_intervals: np.ndarray = np.zeros((0, 2))
 
     def predict(self, delivery: Delivery) -> int:
         """Predict the best subregion for a given delivery
@@ -157,7 +157,7 @@ def pretrain(
         total_demand = sum(delivery.size for delivery in instance.deliveries)
         return int(np.ceil(total_demand / instance.vehicle_capacity))
 
-    num_clusters = params.num_clusters or max(
+    num_clusters = params.num_clusters or min(
         _get_number_of_vehicles(instance) for instance in instances
     )
 
@@ -255,6 +255,18 @@ def finish(instance: CVRPInstance, model: QRPModel) -> CVRPSolution:
             v for subsolution in subsolutions for v in subsolution.vehicles
         ],
     )
+
+
+def solve_instance(model: QRPModel, instance: CVRPInstance) -> CVRPSolution:
+    """Solve an instance dinamically using a solver model"""
+    logger.info("Finetunning on evaluation instance.")
+    model_finetuned = finetune(model, instance)
+
+    logger.info("Starting to dynamic route.")
+    for delivery in tqdm(instance.deliveries):
+        model_finetuned = route(model_finetuned, delivery)
+
+    return finish(instance, model_finetuned)
 
 
 if __name__ == "__main__":

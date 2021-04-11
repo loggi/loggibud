@@ -3,7 +3,6 @@ import json
 import pytest
 from dacite import from_dict
 from mock import patch
-from pathlib import Path
 
 from loggibud.v1.types import CVRPInstance
 from loggibud.v1.baselines.shared.ortools import ORToolsParams
@@ -16,22 +15,8 @@ from loggibud.v1.eval.task1 import evaluate_solution
 
 
 @pytest.fixture
-def train_instances():
-    file_instances = Path("tests/results/cvrp-instances/train/rj-0/").rglob(
-        "*.json"
-    )
-
-    def load_instance(file_instance):
-        with open(file_instance) as f:
-            data = json.load(f)
-
-        return from_dict(CVRPInstance, data)
-
-    instances = [
-        load_instance(file_instance) for file_instance in file_instances
-    ]
-
-    return instances
+def train_instances(toy_cvrp_instance):
+    return [toy_cvrp_instance]
 
 
 @pytest.fixture

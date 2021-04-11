@@ -7,28 +7,24 @@ from ..types import CVRPInstance, CVRPSolution
 
 def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
 
-    is_feasible = True
     # Check if all demands are present.
     solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
-    # assert solution_demands == set(instance.deliveries)
-    is_feasible &= (solution_demands == set(instance.deliveries))
+    assert solution_demands == set(instance.deliveries)
 
     # Check if max capacity is respected.
     max_capacity = max(sum(d.size for d in v.deliveries) for v in solution.vehicles)
-    # assert max_capacity <= instance.vehicle_capacity
-    is_feasible &= (max_capacity <= instance.vehicle_capacity)
+    assert max_capacity <= instance.vehicle_capacity
 
     # Check if maximum number of origins is consistent.
     origins = set([v.origin for v in solution.vehicles])
-    # assert len(origins) <= 1
-    is_feasible &= (len(origins) <= 1)
+    assert len(origins) <= 1
 
     route_distances_m = [
         calculate_route_distance_m(v.circuit) for v in solution.vehicles
     ]
 
     # Convert to km.
-    return round(sum(route_distances_m) / 1_000, 4), is_feasible
+    return round(sum(route_distances_m) / 1_000, 4)
 
 
 if __name__ == "__main__":

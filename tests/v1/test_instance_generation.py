@@ -9,8 +9,8 @@ from loggibud.v1.instance_generation.generators import (
     generate_cvrp_subinstances,
 )
 
-# This test module can actually only be run locally in the presence of the
-# `raw_data` directoy, so it is skipped in Github Actions
+# FIXME: This test module can actually only be run locally in the presence of
+# the `raw_data` directory, so it is skipped for now in Github Actions
 pytest.skip("Skipping tests requiring raw data", allow_module_level=True)
 
 

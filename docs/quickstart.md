@@ -32,9 +32,28 @@ For more information, check our [OSRM detailed documentation](./osrm.md).
 
 ## Python API
 
-We provide an API for loading and running Python solvers.
+We provide an API for loading and running Python solvers. It currently supports any Python version >= 3.7.1, which is natively available in most up-to-date operating systems.
 
-To implement a new method, we suggest you to implement a Python `solve` function that takes an instance and outputs the solution to a file. 
+### Repository setup
+This project uses [Python Poetry](https://python-poetry.org/docs/) to manage dependencies. You can follow its docs to install it, but a simple
+
+```bash
+pip install poetry
+# Or with sudo to install it system-wide
+# sudo pip install poetry
+```
+
+normally suffices. Check if it worked with `poetry --version`.
+
+Then, at the root of the project install the dependencies with
+
+```bash
+poetry install
+```
+
+With everything in place, any Python command can be executed by preceding it with `poetry run` (e.g., `poetry run pytest tests/`). This is usually enough for executing the code in this project, but the user who demands more information can check the Poetry's website.
+
+To implement a new method, we suggest you to create a Python `solve` function that takes an instance and outputs the solution to a file.
 
 ### Task 1
 
@@ -142,7 +161,7 @@ If you don't use Python, you should implement your own IO functions. The JSON sc
 ### Evaluation scripts
 
 ```bash
-python -m loggibud.v1.eval.task1 \
+poetry run python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
 ```

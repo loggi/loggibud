@@ -77,7 +77,7 @@ def to_tsplib(
     ]
     distance_matrix = (
         calculate_distance_matrix_m(locations) * 10
-    ).astype(np.int)
+    ).astype(np.int32)
 
     tspfile += "EDGE_WEIGHT_SECTION\n"
 

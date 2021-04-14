@@ -1,23 +1,15 @@
-import json
-
 import numpy as np
 import pytest
-from dacite import from_dict
 
 from loggibud.v1.distances import (
     calculate_distance_matrix_great_circle_m,
     calculate_route_distance_great_circle_m,
 )
-from loggibud.v1.types import CVRPInstance
 
 
 @pytest.fixture
-def toy_cvrp_points():
-    with open("tests/results/cvrp-instances/train/rj-0/cvrp-0-rj-0.json") as f:
-        data = json.load(f)
-
-    instance = from_dict(CVRPInstance, data)
-    return [delivery.point for delivery in instance.deliveries]
+def toy_cvrp_points(toy_cvrp_instance):
+    return [delivery.point for delivery in toy_cvrp_instance.deliveries]
 
 
 def test_great_circle_distance(toy_cvrp_points):

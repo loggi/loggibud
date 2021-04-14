@@ -68,7 +68,7 @@ def solve(
     model = pywrapcp.RoutingModel(manager)
 
     # Unwrap the size index for every point.
-    sizes = np.array([0] + [d.size for d in instance.deliveries], dtype=np.int)
+    sizes = np.array([0] + [d.size for d in instance.deliveries], dtype=np.int32)
 
     def capacity_callback(src):
         src = manager.IndexToNode(src)
@@ -84,7 +84,7 @@ def solve(
 
     # Compute the distance matrix between points.
     logger.info("Computing distance matrix.")
-    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(np.int)
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(np.int32)
 
     def distance_callback(src, dst):
         x = manager.IndexToNode(src)

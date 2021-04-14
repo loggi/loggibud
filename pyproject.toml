@@ -2,7 +2,7 @@
 name = "loggibud"
 version = "0.1.0"
 description = "Real-world benchmarks for urban delivery problems, including vehicle routing and facility location problems."
-authors = ["Gabriela Surita <gsurita@loggi.com>", "Fillipe Goulart <fillipe.mendes@loggi.com", "Juan Camilo <juan.camilo@loggi.com>"]
+authors = ["Gabriela Surita <gsurita@loggi.com>", "Fillipe Goulart <fillipe.mendes@loggi.com>", "Juan Camilo <juan.camilo@loggi.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]

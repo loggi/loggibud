@@ -70,7 +70,9 @@ def load_income_per_sector(uf):
     )
 
     # Sector code to string.
-    census_income_df["code_tract"] = census_income_df.Cod_setor.apply(lambda s: str(s))
+    census_income_df["code_tract"] = census_income_df.Cod_setor.apply(
+        lambda s: str(s)
+    )
 
     # Total income (V002) to int removing empty fields.
     census_income_df["total_income"] = census_income_df.V002.apply(int_or_zero)
@@ -94,7 +96,9 @@ def prepare_census_data(instance_name):
     census_geo_df = load_geodata_per_sector(INSTANCE_UF[instance_name])
     census_income_df = load_income_per_sector(INSTANCE_UF[instance_name])
 
-    tract_df = pd.merge(left=census_geo_df, right=census_income_df, on="code_tract")
+    tract_df = pd.merge(
+        left=census_geo_df, right=census_income_df, on="code_tract"
+    )
 
     municipalities = MUNICIPALITIES[instance_name]
     tract_df = tract_df[tract_df.name_muni.str.lower().isin(municipalities)]

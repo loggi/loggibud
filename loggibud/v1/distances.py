@@ -24,7 +24,9 @@ def calculate_distance_matrix_m(
     if len(points) < 2:
         return 0
 
-    coords_uri = ";".join(["{},{}".format(point.lng, point.lat) for point in points])
+    coords_uri = ";".join(
+        ["{},{}".format(point.lng, point.lat) for point in points]
+    )
 
     response = requests.get(
         f"{config.host}/table/v1/driving/{coords_uri}?annotations=distance",
@@ -44,7 +46,9 @@ def calculate_route_distance_m(
     if len(points) < 2:
         return 0
 
-    coords_uri = ";".join("{},{}".format(point.lng, point.lat) for point in points)
+    coords_uri = ";".join(
+        "{},{}".format(point.lng, point.lat) for point in points
+    )
 
     response = requests.get(
         f"{config.host}/route/v1/driving/{coords_uri}?annotations=distance&continue_straight=false",
@@ -57,7 +61,7 @@ def calculate_route_distance_m(
 
 
 def calculate_distance_matrix_great_circle_m(
-    points: Iterable[Point]
+    points: Iterable[Point],
 ) -> np.ndarray:
     """Distance matrix using the Great Circle distance
     This is an Euclidean-like distance but on spheres [1]. In this case it is
@@ -88,16 +92,17 @@ def calculate_distance_matrix_great_circle_m(
 
     delta_sigma = np.arctan2(
         np.sqrt(
-            (np.cos(phi2) * np.sin(delta_lambda))**2
+            (np.cos(phi2) * np.sin(delta_lambda)) ** 2
             + (
                 np.cos(phi1) * np.sin(phi2)
                 - np.sin(phi1) * np.cos(phi2) * np.cos(delta_lambda)
-            )**2
+            )
+            ** 2
         ),
         (
             np.sin(phi1) * np.sin(phi2)
             + np.cos(phi1) * np.cos(phi2) * np.cos(delta_lambda)
-        )
+        ),
     )
 
     return EARTH_RADIUS_METERS * delta_sigma

@@ -165,3 +165,43 @@ poetry run python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
 ```
+
+
+## Contributing
+
+First of all, thanks for the interest in the project. If you found a bug or have any question, feel free to open an issue.
+
+If you prefer to contribute with code or documentation, first fork the repository, make the appropriate changes and open a pull request to our `master` branch.
+
+Notice we use Python Poetry to manage dependencies. So if you need to add, remove or update any dependency make sure to use the proper [`poetry`](https://python-poetry.org/docs/) commands to write the changes in the `pyproject.toml` and `poetry.lock` files.
+
+Moreover, before opening a pull request, make sure the following were taken care:
+
+- The `black` formatter was run:
+```bash
+poetry run black .
+```
+
+- The code is conformant with `flake8`:
+```bash
+poetry run flake8 .
+```
+
+- The tests are still passing:
+```bash
+poetry run pytest tests/
+```
+
+### Note to Windows users
+
+In some cases, Windows uses CRLF as end of line instead of LF, which is the norm in Unix-based systems. This erroneously makes git thinks that a whole file was changed when saved in different operating systems.
+
+To alleviate this issue, we recommend Windows users to do one of the following:
+
+- When installing Git for Windows, choose the option "Checkout Windows-style, commit Unix-style line endings" [(see this StackOverflow answer)](https://stackoverflow.com/questions/1889559/git-diff-to-ignore-m)
+
+- If Git is already installed, write the following in the LoggiBUD repository before making any commit:
+
+```bash
+git config core.whitespace cr-at-eol
+```

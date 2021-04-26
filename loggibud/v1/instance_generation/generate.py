@@ -44,7 +44,6 @@ DELIVERY_CONFIGS = {
         max_hubs=2,
         save_to="./data/delivery-instances-1.0",
     ),
-
 }
 
 

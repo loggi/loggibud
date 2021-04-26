@@ -16,7 +16,10 @@ from typing import Optional
 import numpy as np
 
 from loggibud.v1.types import (
-    CVRPInstance, CVRPSolution, CVRPSolutionVehicle, JSONDataclassMixin
+    CVRPInstance,
+    CVRPSolution,
+    CVRPSolutionVehicle,
+    JSONDataclassMixin,
 )
 from loggibud.v1.data_conversion import to_tsplib
 

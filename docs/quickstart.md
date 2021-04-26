@@ -182,6 +182,11 @@ Moreover, before opening a pull request, make sure the following were taken care
 poetry run black .
 ```
 
+- The code is conformant with `flake8`:
+```bash
+poetry run flake8 .
+```
+
 - The tests are still passing:
 ```bash
 poetry run pytest tests/

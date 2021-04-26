@@ -68,13 +68,17 @@ def solve(
     model = pywrapcp.RoutingModel(manager)
 
     # Unwrap the size index for every point.
-    sizes = np.array([0] + [d.size for d in instance.deliveries], dtype=np.int32)
+    sizes = np.array(
+        [0] + [d.size for d in instance.deliveries], dtype=np.int32
+    )
 
     def capacity_callback(src):
         src = manager.IndexToNode(src)
         return sizes[src]
 
-    capacity_callback_index = model.RegisterUnaryTransitCallback(capacity_callback)
+    capacity_callback_index = model.RegisterUnaryTransitCallback(
+        capacity_callback
+    )
     model.AddDimension(
         capacity_callback_index, 0, instance.vehicle_capacity, True, "Capacity"
     )
@@ -84,7 +88,9 @@ def solve(
 
     # Compute the distance matrix between points.
     logger.info("Computing distance matrix.")
-    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(np.int32)
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(
+        np.int32
+    )
 
     def distance_callback(src, dst):
         x = manager.IndexToNode(src)
@@ -97,7 +103,9 @@ def solve(
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = params.first_solution_strategy
 
-    search_parameters.local_search_metaheuristic = params.local_search_metaheuristic
+    search_parameters.local_search_metaheuristic = (
+        params.local_search_metaheuristic
+    )
 
     if params.solution_limit:
         search_parameters.solution_limit = params.solution_limit

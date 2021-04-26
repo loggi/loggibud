@@ -49,7 +49,9 @@ class LKHParams(JSONDataclassMixin):
     num_runs: int = 1
 
 
-def solve(instance: CVRPInstance, params: Optional[LKHParams] = None) -> CVRPSolution:
+def solve(
+    instance: CVRPInstance, params: Optional[LKHParams] = None
+) -> CVRPSolution:
     """Solve a CVRP instance using LKH-3"""
 
     params = params or LKHParams()
@@ -170,12 +172,18 @@ def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
         def write_route(nodes_group):
             # Notice the deliveries start at 2 in the output file but at 0 in
             # the instance
-            deliveries = [instance.deliveries[node - 2] for node in nodes_group]
-            return CVRPSolutionVehicle(origin=instance.origin, deliveries=deliveries)
+            deliveries = [
+                instance.deliveries[node - 2] for node in nodes_group
+            ]
+            return CVRPSolutionVehicle(
+                origin=instance.origin, deliveries=deliveries
+            )
 
         nodes_groups = groupby(all_route_nodes, key=lambda x: x == DEPOT_NODE)
         routes = [
-            write_route(nodes_group) for key, nodes_group in nodes_groups if not key
+            write_route(nodes_group)
+            for key, nodes_group in nodes_groups
+            if not key
         ]
 
     return CVRPSolution(name=instance.name, vehicles=routes)

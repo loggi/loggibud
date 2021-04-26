@@ -76,7 +76,9 @@ def test_qrp_sweep_solver(
 ):
     # Limit OR-Tools TSP solver to 100 ms (this is just a test, a good solution
     # is not required)
-    params = qrp_sweep.QRPParams(ortools_tsp_params=ORToolsParams(time_limit_ms=100))
+    params = qrp_sweep.QRPParams(
+        ortools_tsp_params=ORToolsParams(time_limit_ms=100)
+    )
     model = qrp_sweep.pretrain(train_instances, params=params)
     result = qrp_sweep.solve_instance(model, dev_instance)
 

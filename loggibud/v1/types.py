@@ -99,7 +99,9 @@ class CVRPSolutionVehicle:
 
     @property
     def circuit(self) -> List[Point]:
-        return [self.origin] + [d.point for d in self.deliveries] + [self.origin]
+        return (
+            [self.origin] + [d.point for d in self.deliveries] + [self.origin]
+        )
 
     @property
     def occupation(self) -> int:

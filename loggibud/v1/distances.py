@@ -24,7 +24,9 @@ def calculate_distance_matrix_m(
     if len(points) < 2:
         return 0
 
-    coords_uri = ";".join(["{},{}".format(point.lng, point.lat) for point in points])
+    coords_uri = ";".join(
+        ["{},{}".format(point.lng, point.lat) for point in points]
+    )
 
     response = requests.get(
         f"{config.host}/table/v1/driving/{coords_uri}?annotations=distance",
@@ -44,7 +46,9 @@ def calculate_route_distance_m(
     if len(points) < 2:
         return 0
 
-    coords_uri = ";".join("{},{}".format(point.lng, point.lat) for point in points)
+    coords_uri = ";".join(
+        "{},{}".format(point.lng, point.lat) for point in points
+    )
 
     response = requests.get(
         f"{config.host}/route/v1/driving/{coords_uri}?annotations=distance&continue_straight=false",
@@ -56,7 +60,9 @@ def calculate_route_distance_m(
     return min(r["distance"] for r in response.json()["routes"])
 
 
-def calculate_distance_matrix_great_circle_m(points: Iterable[Point]) -> np.ndarray:
+def calculate_distance_matrix_great_circle_m(
+    points: Iterable[Point],
+) -> np.ndarray:
     """Distance matrix using the Great Circle distance
     This is an Euclidean-like distance but on spheres [1]. In this case it is
     used to estimate the distance in meters between locations in the Earth.

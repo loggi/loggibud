@@ -10,7 +10,9 @@ from loggibud.v1.distances import calculate_distance_matrix_m
 from loggibud.v1.types import CVRPInstance
 
 
-def to_tsplib(instance: CVRPInstance, file_name: Optional[str] = None) -> Optional[str]:
+def to_tsplib(
+    instance: CVRPInstance, file_name: Optional[str] = None
+) -> Optional[str]:
     """Convert instance into TSPLIB format
 
     Parameters
@@ -63,8 +65,12 @@ def to_tsplib(instance: CVRPInstance, file_name: Optional[str] = None) -> Option
 
     # Edge section:
     # Compute distance matrix
-    locations = [instance.origin] + [delivery.point for delivery in instance.deliveries]
-    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(np.int32)
+    locations = [instance.origin] + [
+        delivery.point for delivery in instance.deliveries
+    ]
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(
+        np.int32
+    )
 
     tspfile += "EDGE_WEIGHT_SECTION\n"
 

@@ -52,9 +52,7 @@ def test_delivery_instance_generation(instance_name):
     assert result.deliveries
 
 
-def test_cvrp_subinstance_generation(
-    instance_name, mocked_osrm_distance_matrix
-):
+def test_cvrp_subinstance_generation(instance_name, mocked_osrm_distance_matrix):
     config = DeliveryGenerationConfig(
         name=instance_name,
         num_train_instances=3,

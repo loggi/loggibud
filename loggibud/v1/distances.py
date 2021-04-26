@@ -56,9 +56,7 @@ def calculate_route_distance_m(
     return min(r["distance"] for r in response.json()["routes"])
 
 
-def calculate_distance_matrix_great_circle_m(
-    points: Iterable[Point]
-) -> np.ndarray:
+def calculate_distance_matrix_great_circle_m(points: Iterable[Point]) -> np.ndarray:
     """Distance matrix using the Great Circle distance
     This is an Euclidean-like distance but on spheres [1]. In this case it is
     used to estimate the distance in meters between locations in the Earth.
@@ -88,16 +86,17 @@ def calculate_distance_matrix_great_circle_m(
 
     delta_sigma = np.arctan2(
         np.sqrt(
-            (np.cos(phi2) * np.sin(delta_lambda))**2
+            (np.cos(phi2) * np.sin(delta_lambda)) ** 2
             + (
                 np.cos(phi1) * np.sin(phi2)
                 - np.sin(phi1) * np.cos(phi2) * np.cos(delta_lambda)
-            )**2
+            )
+            ** 2
         ),
         (
             np.sin(phi1) * np.sin(phi2)
             + np.cos(phi1) * np.cos(phi2) * np.cos(delta_lambda)
-        )
+        ),
     )
 
     return EARTH_RADIUS_METERS * delta_sigma

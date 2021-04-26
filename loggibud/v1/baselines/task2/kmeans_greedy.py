@@ -150,9 +150,7 @@ def finish(instance: CVRPInstance, model: KMeansGreedyModel) -> CVRPSolution:
     )
 
 
-def solve_instance(
-    model: KMeansGreedyModel, instance: CVRPInstance
-) -> CVRPSolution:
+def solve_instance(model: KMeansGreedyModel, instance: CVRPInstance) -> CVRPSolution:
     """Solve an instance dinamically using a solver model"""
     logger.info("Finetunning on evaluation instance.")
     model_finetuned = finetune(model, instance)

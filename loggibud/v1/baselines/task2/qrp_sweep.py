@@ -48,9 +48,7 @@ from typing import Dict, List, Optional
 import numpy as np
 from tqdm import tqdm
 
-from loggibud.v1.types import (
-    Delivery, CVRPInstance, CVRPSolution, CVRPSolutionVehicle
-)
+from loggibud.v1.types import Delivery, CVRPInstance, CVRPSolution, CVRPSolutionVehicle
 from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
     ORToolsParams,
@@ -99,8 +97,7 @@ class QRPModel:
         """
 
         point_translated = (
-            np.array([delivery.point.lng, delivery.point.lat])
-            - self.center
+            np.array([delivery.point.lng, delivery.point.lat]) - self.center
         )
         angle = np.arctan2(point_translated[1], point_translated[0])
 
@@ -164,9 +161,7 @@ def pretrain(
     # Determine angle intervals in the form
     # [[-pi, angle_1], [angle_1, angle_2], ..., [angle_n, pi]]
     # Notice we need to split into `n + 1` stop-points to get `n` clusters
-    split_indices = np.linspace(
-        0, angles.size - 1, num_clusters + 1, dtype=int
-    )
+    split_indices = np.linspace(0, angles.size - 1, num_clusters + 1, dtype=int)
     sorted_angles = np.sort(angles)
     sorted_angles[0] = -np.pi
     sorted_angles[-1] = np.pi
@@ -201,10 +196,7 @@ def route(model: QRPModel, delivery: Delivery) -> QRPModel:
     subsolution = model.cluster_subsolutions[cluster]
 
     def is_feasible(route):
-        return (
-            route.occupation + delivery.size
-            < model.subinstance.vehicle_capacity
-        )
+        return route.occupation + delivery.size < model.subinstance.vehicle_capacity
 
     # TODO: We could make this method faster by using a route size table, but
     # seems a bit overkill since it's not a bottleneck.
@@ -217,9 +209,7 @@ def route(model: QRPModel, delivery: Delivery) -> QRPModel:
     if feasible_routes:
         route_idx, route = max(feasible_routes, key=lambda v: v[1].occupation)
     else:
-        route = CVRPSolutionVehicle(
-            origin=model.subinstance.origin, deliveries=[]
-        )
+        route = CVRPSolutionVehicle(origin=model.subinstance.origin, deliveries=[])
         subsolution.append(route)
         route_idx = len(subsolution) - 1
 
@@ -251,9 +241,7 @@ def finish(instance: CVRPInstance, model: QRPModel) -> CVRPSolution:
 
     return CVRPSolution(
         name=instance.name,
-        vehicles=[
-            v for subsolution in subsolutions for v in subsolution.vehicles
-        ],
+        vehicles=[v for subsolution in subsolutions for v in subsolution.vehicles],
     )
 
 
@@ -284,15 +272,11 @@ if __name__ == "__main__":
     # Load instance and heuristic params.
     eval_path = Path(args.eval_instances)
     eval_path_dir = eval_path if eval_path.is_dir() else eval_path.parent
-    eval_files = (
-        [eval_path] if eval_path.is_file() else list(eval_path.iterdir())
-    )
+    eval_files = [eval_path] if eval_path.is_file() else list(eval_path.iterdir())
 
     train_path = Path(args.train_instances)
     train_path_dir = train_path if train_path.is_dir() else train_path.parent
-    train_files = (
-        [train_path] if train_path.is_file() else list(train_path.iterdir())
-    )
+    train_files = [train_path] if train_path.is_file() else list(train_path.iterdir())
 
     # params = params_class.from_file(args.params) if args.params else None
 

@@ -77,6 +77,7 @@ def solve(
     subinstances = [
         CVRPInstance(
             name=instance.name,
+            region=instance.region,
             deliveries=subinstance.tolist(),
             origin=instance.origin,
             vehicle_capacity=instance.vehicle_capacity,

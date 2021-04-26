@@ -22,7 +22,7 @@ import numpy as np
 from sklearn.cluster import MiniBatchKMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery
-from ..shared.ortools import solve_cvrp as ortools_solve, ORToolsParams
+from ..shared.ortools import solve as ortools_solve, ORToolsParams
 
 
 logger = logging.getLogger(__name__)
@@ -57,8 +57,8 @@ def solve(
 
     num_deliveries = len(instance.deliveries)
     num_clusters = int(
-        params.fixed_num_clusters
-        or np.ceil(num_deliveries / (params.variable_num_clusters or 1))
+        params.fixed_num_clusters or
+        np.ceil(num_deliveries / (params.variable_num_clusters or 1))
     )
 
     logger.info(f"Clustering instance into {num_clusters} subinstances")
@@ -79,6 +79,7 @@ def solve(
 
         cluster_instance = CVRPInstance(
             name=instance.name,
+            region=instance.region,
             deliveries=deliveries,
             origin=instance.origin,
             vehicle_capacity=instance.vehicle_capacity,
@@ -110,6 +111,7 @@ def solve(
 
     aggregated_instance = CVRPInstance(
         name=instance.name,
+        region=instance.region,
         deliveries=aggregated_deliveries,
         origin=instance.origin,
         vehicle_capacity=instance.vehicle_capacity,
@@ -123,7 +125,8 @@ def solve(
             deliveries=[
                 d
                 for v in solve_cluster(
-                    [d for groups in v.deliveries for d in subsolutions[int(groups.id)]]
+                    [d for groups in v.deliveries for d in subsolutions[int(
+                        groups.id)]]
                 )
                 for d in v
             ],

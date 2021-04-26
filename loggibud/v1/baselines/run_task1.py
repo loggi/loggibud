@@ -7,8 +7,7 @@ from multiprocessing import Pool
 
 from tqdm import tqdm
 
-from loggibud.v1.types import CVRPInstance
-
+from loggibud.v1.types import CVRPInstance, CVRPSolution
 
 if __name__ == "__main__":
 

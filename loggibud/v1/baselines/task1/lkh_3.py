@@ -45,6 +45,16 @@ class LKHParams(JSONDataclassMixin):
     # Number of runs (as in a multistart heuristic)
     num_runs: int = 1
 
+    def set_auxiliary_file_names(self, instance: CVRPInstance):
+        """Update the auxiliary file names with the instance name
+        This is useful in case the solver should be worked in parallel and the
+        same file names would conflict
+        """
+
+        self.input_vrp_file = f"vrp_input_temp_{instance.name}.vrp"
+        self.input_par_file = f"vrp_input_temp_{instance.name}.par"
+        self.output_tour_file = f"vrp_output_temp_{instance.name}.vrp"
+
 
 def solve(
     instance: CVRPInstance, params: Optional[LKHParams] = None
@@ -52,6 +62,7 @@ def solve(
     """Solve a CVRP instance using LKH-3"""
 
     params = params or LKHParams()
+    params.set_auxiliary_file_names(instance)
 
     logger.info("Converting instance into a TSPLIB file")
     convert_instance_file(instance, params)
@@ -82,10 +93,8 @@ def convert_instance_file(instance: CVRPInstance, params: LKHParams) -> None:
     to_tsplib(instance, file_name=params.input_vrp_file)
 
     # For the Asymetric CVRP, it only respects the capacity if the number of
-    # vehicles is explicitly provided. Here, we use the same rule as the one
-    # automatically adopted in the symmetric case
-    total_demand = sum(delivery.size for delivery in instance.deliveries)
-    num_vehicles = int(np.ceil(total_demand / instance.vehicle_capacity))
+    # vehicles is explicitly provided
+    num_vehicles = _get_num_vehicles(instance)
     with open(params.input_par_file, "w") as f:
         f.write(
             "SPECIAL\n"
@@ -184,3 +193,31 @@ def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
         ]
 
     return CVRPSolution(name=instance.name, vehicles=routes)
+
+
+def _get_num_vehicles(instance: CVRPInstance) -> int:
+    """Estimate a proper number of vehicles for an instance
+    The typical number of vehicles used internally by the LKH-3 is given by
+
+        ceil(total_demand / vehicle_capacity)
+
+    Unfortunately, this does not work in some cases. Here is a simple example.
+    Consider three deliveries with demands 3, 4 and 5, and assume the vehicle
+    capacity is 6. The total demand is 12, so according to this equation we
+    would require ceil(12 / 6) = 2 vehicles.
+    Unfortunately, there is no way to place all three deliveries in these two
+    vehicles without splitting a package.
+
+    Thus, we use a workaround by assuming all deliveries have the same maximum
+    demand. In this example, each delivery would have 5 as demand so the actual
+    number of vehicles would be ceil(5 * 3 / 6) = 3, and the problem becomes
+    feasible.
+
+    This heuristic is an overestimation and may be too much in some cases,
+    but we found that the solver is more robust in excess (it ignores some
+    vehicles if required) than in scarcity (it returns an unfeasible solution).
+    """
+
+    max_demand = max(delivery.size for delivery in instance.deliveries)
+    total_artificial_demand = max_demand * len(instance.deliveries)
+    return int(np.ceil(total_artificial_demand / instance.vehicle_capacity))

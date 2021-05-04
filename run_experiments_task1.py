@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     "replication": i + 1,
                     "total_distance": total_distance,
                     "total_time": total_time,
-                    "num_vehicles": len(result.vehicles),
+                    "num_vehicles": len(result.vehicles) if result else -1,
                     "feasible_solution": is_feasible,
                 })
 

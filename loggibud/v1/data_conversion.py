@@ -53,10 +53,7 @@ def to_tsplib(
     tspfile += "\n"
 
     # Demand section
-    tspfile += (
-        "DEMAND_SECTION\n"
-        "1 0\n"
-    )
+    tspfile += "DEMAND_SECTION\n" "1 0\n"
     tspfile += "\n".join(
         f"{i} {delivery.size}"
         for i, delivery in enumerate(instance.deliveries, start=2)
@@ -64,25 +61,22 @@ def to_tsplib(
     tspfile += "\n"
 
     # Depot section: ensure node 1 is the depot (-1 to terminate the list)
-    tspfile += (
-        "DEPOT_SECTION\n"
-        "1\n"
-        "-1\n"
-    )
+    tspfile += "DEPOT_SECTION\n" "1\n" "-1\n"
 
     # Edge section:
     # Compute distance matrix
     locations = [instance.origin] + [
         delivery.point for delivery in instance.deliveries
     ]
-    distance_matrix = (
-        calculate_distance_matrix_m(locations) * 10
-    ).astype(np.int32)
+    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(
+        np.int32
+    )
 
     tspfile += "EDGE_WEIGHT_SECTION\n"
 
     def print_row(row):
         return " ".join(str(el) for el in row)
+
     tspfile += "\n".join(print_row(row) for row in distance_matrix)
 
     if not file_name:

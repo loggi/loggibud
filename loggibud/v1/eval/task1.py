@@ -17,7 +17,8 @@ def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
     max_capacity = max(
         sum(d.size for d in v.deliveries) for v in solution.vehicles
     )
-    assert max_capacity <= instance.vehicle_capacity
+    # assert max_capacity <= instance.vehicle_capacity
+    is_feasible &= (max_capacity <= instance.vehicle_capacity)
 
     # Check if maximum number of origins is consistent.
     origins = set([v.origin for v in solution.vehicles])

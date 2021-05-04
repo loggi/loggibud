@@ -18,6 +18,10 @@ NUM_REPLICATIONS = 1
 if __name__ == "__main__":
     file_instances = Path("data/cvrp-instances-1.0/dev/").rglob("*.json")
     solvers = {"ortools": ortools, "lkh-3": lkh_3}
+    params_dict = {
+        "ortools": ortools.ORToolsParams(time_limit_ms=20 * 60_000),
+        "lkh-3": lkh_3.LKHParams(time_limit_s=20 * 60),
+    }
 
     results_data = []
     for k, file_instance in enumerate(file_instances):
@@ -28,6 +32,8 @@ if __name__ == "__main__":
         for solver_name, solver in solvers.items():
             for i in range(NUM_REPLICATIONS):
                 print(f"Solver {solver_name} in instance {instance.name}")
+                params = params_dict[solver_name]
+
                 tic = default_timer()
                 result = solver.solve(instance)
                 total_time = default_timer() - tic
@@ -47,6 +53,7 @@ if __name__ == "__main__":
                     "replication": i + 1,
                     "total_distance": total_distance,
                     "total_time": total_time,
+                    "num_vehicles": len(result.vehicles),
                     "feasible_solution": is_feasible,
                 })
 

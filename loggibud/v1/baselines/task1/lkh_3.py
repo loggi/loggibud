@@ -11,9 +11,8 @@ import os
 import subprocess
 from dataclasses import dataclass
 from itertools import groupby
+from math import ceil
 from typing import Dict, Optional
-
-import numpy as np
 
 from loggibud.v1.types import (
     CVRPInstance,
@@ -211,16 +210,16 @@ def _get_num_vehicles(instance: CVRPInstance) -> int:
     Unfortunately, there is no way to place all three deliveries in these two
     vehicles without splitting a package.
 
-    Thus, we use a workaround by assuming all deliveries have the same maximum
-    demand. In this example, each delivery would have 5 as demand so the actual
-    number of vehicles would be ceil(5 * 3 / 6) = 3, and the problem becomes
-    feasible.
+    Thus, we use a workaround by assuming all packages have the same maximum
+    demand. Thus, we can place `floor(vehicle_capacity / max_demand)` packages
+    in a vehicle. Dividing the total number of packages by this we get an
+    estimation of how many vehicles we require.
 
     This heuristic is an overestimation and may be too much in some cases,
     but we found that the solver is more robust in excess (it ignores some
     vehicles if required) than in scarcity (it returns an unfeasible solution).
     """
 
+    num_deliveries = len(instance.deliveries)
     max_demand = max(delivery.size for delivery in instance.deliveries)
-    total_artificial_demand = max_demand * len(instance.deliveries)
-    return int(np.ceil(total_artificial_demand / instance.vehicle_capacity))
+    return ceil(num_deliveries / (instance.vehicle_capacity // max_demand))

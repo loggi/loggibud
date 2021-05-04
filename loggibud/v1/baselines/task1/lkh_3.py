@@ -11,12 +11,14 @@ import os
 import subprocess
 from dataclasses import dataclass
 from itertools import groupby
-from typing import Optional
-
-import numpy as np
+from math import ceil
+from typing import Dict, Optional
 
 from loggibud.v1.types import (
-    CVRPInstance, CVRPSolution, CVRPSolutionVehicle, JSONDataclassMixin
+    CVRPInstance,
+    CVRPSolution,
+    CVRPSolutionVehicle,
+    JSONDataclassMixin,
 )
 from loggibud.v1.data_conversion import to_tsplib
 
@@ -29,16 +31,6 @@ DEPOT_NODE = 1
 
 @dataclass
 class LKHParams(JSONDataclassMixin):
-    # We need temporary file to interact with the LKH-3 C solver
-    # This has parameters of the problem and it has the TSPLIB format
-    input_vrp_file: str = "vrp_input_temp.vrp"
-
-    # This file has parameters of the solver, as described in [1]
-    input_par_file: str = "vrp_input_temp.par"
-
-    # This file is the output file, which contains the output routes
-    output_tour_file: str = "vrp_output_temp.vrp"
-
     # Time limit in seconds to step the solver
     time_limit_s: int = 60 * 5
 
@@ -63,9 +55,7 @@ def solve(
     solution = read_solution(instance, params)
 
     logger.info("Cleaning up temporary files")
-    os.remove(params.input_vrp_file)
-    os.remove(params.input_par_file)
-    os.remove(params.output_tour_file)
+    remove_auxiliary_files(instance)
 
     return solution
 
@@ -77,22 +67,23 @@ def convert_instance_file(instance: CVRPInstance, params: LKHParams) -> None:
         - A .vrp file with information about the instance.
     The vrp file is created with the original TSPLIB format, and the .par one,
     which is specific for the LKH-3 solver, is created here.
+    These files will have the instance name to prevent conflicts in case the
+    solver runs in parallel solving multiple instances.
     """
 
-    to_tsplib(instance, file_name=params.input_vrp_file)
+    auxiliary_file_names = _get_auxiliary_file_names(instance)
+    to_tsplib(instance, file_name=auxiliary_file_names["input_vrp_file"])
 
     # For the Asymetric CVRP, it only respects the capacity if the number of
-    # vehicles is explicitly provided. Here, we use the same rule as the one
-    # automatically adopted in the symmetric case
-    total_demand = sum(delivery.size for delivery in instance.deliveries)
-    num_vehicles = int(np.ceil(total_demand / instance.vehicle_capacity))
-    with open(params.input_par_file, "w") as f:
+    # vehicles is explicitly provided
+    num_vehicles = _get_num_vehicles(instance)
+    with open(auxiliary_file_names["input_par_file"], "w") as f:
         f.write(
             "SPECIAL\n"
-            f"PROBLEM_FILE = {params.input_vrp_file}\n"
+            f"PROBLEM_FILE = {auxiliary_file_names['input_vrp_file']}\n"
             "MTSP_OBJECTIVE = MINSUM\n"
             f"RUNS = {params.num_runs}\n"
-            f"TOUR_FILE = {params.output_tour_file}\n"
+            f"TOUR_FILE = {auxiliary_file_names['output_tour_file']}\n"
             f"TIME_LIMIT = {params.time_limit_s}\n"
             f"VEHICLES = {num_vehicles}"
         )
@@ -101,7 +92,11 @@ def convert_instance_file(instance: CVRPInstance, params: LKHParams) -> None:
 def solve_lkh(instance: CVRPInstance, params: LKHParams) -> None:
     """Call the C solver and generate output files"""
 
-    arguments = ("./loggibud/v1/baselines/task1/LKH", params.input_par_file)
+    auxiliary_file_names = _get_auxiliary_file_names(instance)
+    arguments = (
+        "./loggibud/v1/baselines/task1/LKH",
+        auxiliary_file_names["input_par_file"],
+    )
     popen = subprocess.Popen(arguments, stdout=subprocess.PIPE)
     popen.wait()  # run the solver in the background
 
@@ -147,8 +142,9 @@ def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
         [2, 3], [4, 5, 6]. These will be the nodes of final routes.
     """
 
+    auxiliary_file_names = _get_auxiliary_file_names(instance)
     num_locations = len(instance.deliveries) + 1
-    with open(params.output_tour_file, "r") as f:
+    with open(auxiliary_file_names["output_tour_file"], "r") as f:
         # Ignore the header until we reach `TOUR_SECTION`
         for line in f:
             if line.startswith("TOUR_SECTION"):
@@ -184,3 +180,45 @@ def read_solution(instance: CVRPInstance, params: LKHParams) -> CVRPSolution:
         ]
 
     return CVRPSolution(name=instance.name, vehicles=routes)
+
+
+def remove_auxiliary_files(instance: CVRPInstance) -> None:
+    auxiliary_file_names = _get_auxiliary_file_names(instance)
+    for file_name in auxiliary_file_names.values():
+        os.remove(file_name)
+
+
+def _get_num_vehicles(instance: CVRPInstance) -> int:
+    """Estimate a proper number of vehicles for an instance
+    The typical number of vehicles used internally by the LKH-3 is given by
+
+        ceil(total_demand / vehicle_capacity)
+
+    Unfortunately, this does not work in some cases. Here is a simple example.
+    Consider three deliveries with demands 3, 4 and 5, and assume the vehicle
+    capacity is 6. The total demand is 12, so according to this equation we
+    would require ceil(12 / 6) = 2 vehicles.
+    Unfortunately, there is no way to place all three deliveries in these two
+    vehicles without splitting a package.
+
+    Thus, we use a workaround by assuming all packages have the same maximum
+    demand. Thus, we can place `floor(vehicle_capacity / max_demand)` packages
+    in a vehicle. Dividing the total number of packages by this we get an
+    estimation of how many vehicles we require.
+
+    This heuristic is an overestimation and may be too much in some cases,
+    but we found that the solver is more robust in excess (it ignores some
+    vehicles if required) than in scarcity (it returns an unfeasible solution).
+    """
+
+    num_deliveries = len(instance.deliveries)
+    max_demand = max(delivery.size for delivery in instance.deliveries)
+    return ceil(num_deliveries / (instance.vehicle_capacity // max_demand))
+
+
+def _get_auxiliary_file_names(instance: CVRPInstance) -> Dict[str, str]:
+    return {
+        "input_vrp_file": f"vrp_input_temp_{instance.name}.vrp",
+        "input_par_file": f"vrp_input_temp_{instance.name}.par",
+        "output_tour_file": f"vrp_output_temp_{instance.name}.vrp",
+    }

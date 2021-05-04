@@ -32,9 +32,28 @@ For more information, check our [OSRM detailed documentation](./osrm.md).
 
 ## Python API
 
-We provide an API for loading and running Python solvers.
+We provide an API for loading and running Python solvers. It currently supports any Python version >= 3.7.1, which is natively available in most up-to-date operating systems.
 
-To implement a new method, we suggest you to implement a Python `solve` function that takes an instance and outputs the solution to a file. 
+### Repository setup
+This project uses [Python Poetry](https://python-poetry.org/docs/) to manage dependencies. You can follow its docs to install it, but a simple
+
+```bash
+pip install poetry
+# Or with sudo to install it system-wide
+# sudo pip install poetry
+```
+
+normally suffices. Check if it worked with `poetry --version`.
+
+Then, at the root of the project install the dependencies with
+
+```bash
+poetry install
+```
+
+With everything in place, any Python command can be executed by preceding it with `poetry run` (e.g., `poetry run pytest tests/`). This is usually enough for executing the code in this project, but the user who demands more information can check the Poetry's website.
+
+To implement a new method, we suggest you to create a Python `solve` function that takes an instance and outputs the solution to a file.
 
 ### Task 1
 
@@ -142,7 +161,47 @@ If you don't use Python, you should implement your own IO functions. The JSON sc
 ### Evaluation scripts
 
 ```bash
-python -m loggibud.v1.eval.task1 \
+poetry run python -m loggibud.v1.eval.task1 \
     --instance tests/results/cvrp-instances/train/rj-0-cvrp-0.json \
     --solution results/rj-0-cvrp-0.json
+```
+
+
+## Contributing
+
+First of all, thanks for the interest in the project. If you found a bug or have any question, feel free to open an issue.
+
+If you prefer to contribute with code or documentation, first fork the repository, make the appropriate changes and open a pull request to our `master` branch.
+
+Notice we use Python Poetry to manage dependencies. So if you need to add, remove or update any dependency make sure to use the proper [`poetry`](https://python-poetry.org/docs/) commands to write the changes in the `pyproject.toml` and `poetry.lock` files.
+
+Moreover, before opening a pull request, make sure the following were taken care:
+
+- The `black` formatter was run:
+```bash
+poetry run black .
+```
+
+- The code is conformant with `flake8`:
+```bash
+poetry run flake8 .
+```
+
+- The tests are still passing:
+```bash
+poetry run pytest tests/
+```
+
+### Note to Windows users
+
+In some cases, Windows uses CRLF as end of line instead of LF, which is the norm in Unix-based systems. This erroneously makes git thinks that a whole file was changed when saved in different operating systems.
+
+To alleviate this issue, we recommend Windows users to do one of the following:
+
+- When installing Git for Windows, choose the option "Checkout Windows-style, commit Unix-style line endings" [(see this StackOverflow answer)](https://stackoverflow.com/questions/1889559/git-diff-to-ignore-m)
+
+- If Git is already installed, write the following in the LoggiBUD repository before making any commit:
+
+```bash
+git config core.whitespace cr-at-eol
 ```

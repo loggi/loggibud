@@ -37,6 +37,9 @@ jobs:
     #- name: Check type hints with mypy
       #run: |
         #poetry run mypy --ignore-missing-imports .
+    - name: Check whether black formatter was run
+      run: |
+        poetry run black --check .
     - name: Run tests and check coverage
       run: |
         poetry run pytest tests/

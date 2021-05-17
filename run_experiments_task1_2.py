@@ -4,9 +4,9 @@ from pathlib import Path
 from timeit import default_timer
 
 import pandas as pd
+from ortools.constraint_solver import routing_enums_pb2
 
 from loggibud.v1.baselines.shared import ortools
-from loggibud.v1.baselines.task1 import lkh_3
 from loggibud.v1.eval.task1 import evaluate_solution
 from loggibud.v1.types import CVRPInstance
 
@@ -17,13 +17,15 @@ NUM_REPLICATIONS = 1
 
 if __name__ == "__main__":
     file_instances = Path("data/cvrp-instances-1.0/dev/").rglob("*.json")
-    solvers = {"ortools": ortools, "lkh-3": lkh_3}
+    solvers = {"ortools": ortools}
     params_dict = {
-        "ortools": ortools.ORToolsParams(time_limit_ms=20 * 60_000),
-        "lkh-3": lkh_3.LKHParams(time_limit_s=20 * 60),
+        "ortools": ortools.ORToolsParams(
+            first_solution_strategy=routing_enums_pb2.FirstSolutionStrategy.
+            PATH_MOST_CONSTRAINED_ARC,
+            local_search_metaheuristic=None,
+            time_limit_ms=30 * 60_000,
+        ),
     }
-
-    df_previous = pd.read_csv("task1_results_temp_second_attempt.csv")
 
     results_data = []
     for k, file_instance in enumerate(file_instances):
@@ -32,10 +34,6 @@ if __name__ == "__main__":
 
         instance = from_dict(CVRPInstance, data_file)
 
-        if (df_previous["instance_name"] == instance.name).any():
-            print(f"Instance {instance.name} already run")
-            continue
-        
         for solver_name, solver in solvers.items():
             for i in range(NUM_REPLICATIONS):
                 print(f"Solver {solver_name} in instance {instance.name}")
@@ -79,7 +77,7 @@ if __name__ == "__main__":
 
         # Print results so far
         df_results = pd.DataFrame(results_data)
-        df_results.to_csv("task1_results_temp.csv", index=False)
+        df_results.to_csv("task1_2_results_temp.csv", index=False)
 
     df_results = pd.DataFrame(results_data)
-    df_results.to_csv("task1_results.csv", index=False)
+    df_results.to_csv("task1_2_results.csv", index=False)

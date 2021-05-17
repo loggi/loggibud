@@ -103,9 +103,10 @@ def solve(
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = params.first_solution_strategy
 
-    search_parameters.local_search_metaheuristic = (
-        params.local_search_metaheuristic
-    )
+    if params.local_search_metaheuristic:
+        search_parameters.local_search_metaheuristic = (
+            params.local_search_metaheuristic
+        )
 
     if params.solution_limit:
         search_parameters.solution_limit = params.solution_limit

@@ -12,7 +12,8 @@ EARTH_RADIUS_METERS = 6371000
 
 @dataclass
 class OSRMConfig:
-    host: str = "http://localhost:5000"
+    # host: str = "http://localhost:5000"
+    host: str = "http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com"
     timeout_s: int = 600
 
 

@@ -121,7 +121,7 @@ solution.
 
 If you want more details on how we generate our instances and how they relate
 to actual deliveries, please check our [generation pipeline
-documentation](./generation.md). It also includes the steps for reproducing the
+documentation](./loggibud/v1/instance_generation/). It also includes the steps for reproducing the
 provided instances.
 
 

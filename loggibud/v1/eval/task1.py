@@ -1,11 +1,16 @@
 from pathlib import Path
 from argparse import ArgumentParser
+from typing import Optional
 
-from ..distances import calculate_route_distance_m
+from ..distances import calculate_route_distance_m, OSRMConfig
 from ..types import CVRPInstance, CVRPSolution
 
 
-def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
+def evaluate_solution(
+    instance: CVRPInstance,
+    solution: CVRPSolution,
+    config: Optional[OSRMConfig] = None,
+) -> float:
 
     # Check if all demands are present.
     solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
@@ -22,7 +27,8 @@ def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
     assert len(origins) <= 1
 
     route_distances_m = [
-        calculate_route_distance_m(v.circuit) for v in solution.vehicles
+        calculate_route_distance_m(v.circuit, config=config)
+        for v in solution.vehicles
     ]
 
     # Convert to km.

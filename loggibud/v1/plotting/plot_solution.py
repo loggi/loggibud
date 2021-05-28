@@ -23,7 +23,7 @@ MAP_COLORS = (
     "lightgreen",
     "lightblue",
     "lightgray",
-    "cadetblue"
+    "cadetblue",
 )
 
 
@@ -48,10 +48,12 @@ def plot_solution(
             (vehicle.origin.lat, vehicle.origin.lng)
             for vehicle in solution.vehicles
         ],
-        axis=0
+        axis=0,
     )
     m = folium.Map(
-        location=origins_mean, zoom_start=12, tiles="cartodbpositron",
+        location=origins_mean,
+        zoom_start=12,
+        tiles="cartodbpositron",
     )
 
     num_vehicles = len(solution.vehicles)

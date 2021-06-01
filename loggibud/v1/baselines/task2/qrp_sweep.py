@@ -58,6 +58,7 @@ from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
     ORToolsParams,
 )
+from loggibud.v1.baselines.task1.lkh_3 import _get_num_vehicles
 
 
 logger = logging.getLogger(__name__)
@@ -154,13 +155,13 @@ def pretrain(
 
     # Get number of subregions as the maximum number of vehicles among all
     # training instances if no value is provided
-    def _get_number_of_vehicles(instance: CVRPInstance) -> int:
-        """Compute required number of vehicles in instance"""
-        total_demand = sum(delivery.size for delivery in instance.deliveries)
-        return int(np.ceil(total_demand / instance.vehicle_capacity))
+    # def _get_number_of_vehicles(instance: CVRPInstance) -> int:
+        # """Compute required number of vehicles in instance"""
+        # total_demand = sum(delivery.size for delivery in instance.deliveries)
+        # return int(np.ceil(total_demand / instance.vehicle_capacity))
 
     num_clusters = params.num_clusters or min(
-        _get_number_of_vehicles(instance) for instance in instances
+        _get_num_vehicles(instance) for instance in instances
     )
 
     # Determine angle intervals in the form

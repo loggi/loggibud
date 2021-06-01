@@ -26,6 +26,8 @@ from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
     ORToolsParams,
 )
+from loggibud.v1.baselines.task1.lkh_3 import _get_num_vehicles
+
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +42,7 @@ class KMeansGreedyParams:
     @classmethod
     def get_baseline(cls):
         return cls(
-            fixed_num_clusters=150,
+            # fixed_num_clusters=150,
             ortools_tsp_params=ORToolsParams(
                 max_vehicles=1,
                 time_limit_ms=1_000,
@@ -69,13 +71,16 @@ def pretrain(
         ]
     )
 
-    num_deliveries = len(points)
-    num_clusters = int(
-        params.fixed_num_clusters
-        or np.ceil(
-            num_deliveries / (params.variable_num_clusters or num_deliveries)
-        )
+    num_clusters = params.fixed_num_clusters or min(
+        _get_num_vehicles(instance) for instance in instances
     )
+    # num_deliveries = len(points)
+    # num_clusters = int(
+        # params.fixed_num_clusters
+        # or np.ceil(
+            # num_deliveries / (params.variable_num_clusters or num_deliveries)
+        # )
+    # )
 
     logger.info(f"Clustering instance into {num_clusters} subinstances")
     clustering = KMeans(num_clusters, random_state=params.seed)

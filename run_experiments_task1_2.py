@@ -21,7 +21,7 @@ if __name__ == "__main__":
     params_dict = {
         "ortools": ortools.ORToolsParams(
             first_solution_strategy=routing_enums_pb2.FirstSolutionStrategy.
-            PATH_MOST_CONSTRAINED_ARC,
+            CHRISTOFIDES,
             local_search_metaheuristic=None,
             time_limit_ms=30 * 60_000,
         ),

@@ -14,14 +14,14 @@ if __name__ == "__main__":
     dev_paths = Path("data/cvrp-instances-1.0/dev/")
     solvers = {"kmeans_greedy": kmeans_greedy, "qrp_sweep": qrp_sweep}
     params_dict = {
-        "kmeans_greedy": kmeans_greedy.QRPModel(
+        "kmeans_greedy": kmeans_greedy.KMeansGreedyParams(
             ortools_tsp_params=kmeans_greedy.ORToolsParams(
                 first_solution_strategy=routing_enums_pb2.
                 FirstSolutionStrategy.PATH_CHEAPEST_ARC,
                 local_search_metaheuristic=None,
             )
         ),
-        "qrp_sweep": qrp_sweep.QRPModel(
+        "qrp_sweep": qrp_sweep.QRPParams(
             ortools_tsp_params=qrp_sweep.ORToolsParams(
                 first_solution_strategy=routing_enums_pb2.
                 FirstSolutionStrategy.PATH_CHEAPEST_ARC,

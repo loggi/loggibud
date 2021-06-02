@@ -25,7 +25,7 @@ docker run --rm -t -id \
   --name osrm \
   -p 5000:5000 \
   -v "${PWD}/osrm:/data" \
-  osrm/osrm-backend osrm-routed --algorithm ch /data/brazil-201110.osrm --max-table-size 10000
+  osrm/osrm-backend:v5.24.0 osrm-routed --algorithm ch /data/brazil-201110.osrm --max-table-size 10000
 ```
 
 For more information, check our [OSRM detailed documentation](./osrm.md).

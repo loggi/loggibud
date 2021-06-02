@@ -42,9 +42,12 @@ def mocked_ortools_osrm_distance_matrix():
 def mocked_osrm_route_distance():
     """Monkey-patch the OSRM route distance with the Great Circle"""
 
+    def _mocked_calculate_route_distance_m(points, config=None):
+        return calculate_route_distance_great_circle_m(points)
+
     with patch(
         "loggibud.v1.eval.task1.calculate_route_distance_m",
-        new=calculate_route_distance_great_circle_m,
+        new=_mocked_calculate_route_distance_m,
     ) as mock_osrm:
         yield mock_osrm
 

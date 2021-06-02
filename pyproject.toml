@@ -17,6 +17,7 @@ Shapely = "^1.7.1"
 pandas = "^1.2.3"
 geopandas = "^0.9.0"
 folium = "^0.12.1"
+polyline = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.3"

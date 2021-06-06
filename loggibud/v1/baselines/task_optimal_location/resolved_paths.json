@@ -1,0 +1,7 @@
+{
+  "df": [
+    "./data/cvrp-instances-1.0/dev/df-0",
+    "./data/cvrp-instances-1.0/dev/df-1",
+    "./data/cvrp-instances-1.0/dev/df-2"
+  ]
+}

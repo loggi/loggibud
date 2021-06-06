@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from os import X_OK
 from typing import Iterable, Optional
 
 import requests

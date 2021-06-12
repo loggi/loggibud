@@ -32,7 +32,7 @@ logging.basicConfig(level = logging.INFO)
 
 pointsHashTable = {}
 
-def hashKeyDistance(origin: Point, destination: Point):
+def distance(origin: Point, destination: Point):
 
   if not (origin, destination) in pointsHashTable:
     matrixDistance = calculate_distance_matrix_great_circle_m([origin, destination])
@@ -49,7 +49,7 @@ def calculateMaxMinDistance(origins: List[Point], clients: Generator[Point]):
     minDistance = math.inf
 
     for origin in origins:
-      dist = hashKeyDistance(origin, client)
+      dist = distance(origin, client)
       if dist < minDistance:
         minDistance = dist
         originMin = origin
@@ -73,7 +73,7 @@ def solve(instancesFactory, candidates: List[Point]):
   logger.info(f"The Current MaxSolution is: {currentMaxSolution}")
   
   maxSolutionCandidates = []
-  minDistanceCandidate = currentMaxSolution
+  minDistanceCandidate = math.inf
 
   for candidate in candidates:
     originsWithCandidates = origins.union([candidate])

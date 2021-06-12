@@ -39,7 +39,7 @@ class MinMaxSolution:
   pass
 
 
-def hashKeyDistance(origin: Point, destination: Point):
+def distance(origin: Point, destination: Point):
 
   if not (origin, destination) in pointsHashTable:
     matrixDistance = calculate_distance_matrix_great_circle_m([origin, destination])
@@ -55,7 +55,7 @@ def calculateSumDistance(origins: Set[Point], clients: List[Point]):
     minDistance = math.inf
 
     for origin in origins:
-      dist = hashKeyDistance(origin, client)
+      dist = distance(origin, client)
 
       if dist < minDistance:
         minDistance = dist
@@ -75,7 +75,7 @@ def solve(instancesFactory, candidates: List[Point]):
   logger.info(f"The current MinSum is: {currentMinSum}")
   
   minSumSolutionCandidates = []
-  minSumCandidate = (currentMinSum, 0)
+  minSumCandidate = (math.inf, 0)
 
   for candidate in candidates:
     originsWithCandidates = origins.union([candidate])

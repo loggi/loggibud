@@ -15,47 +15,29 @@ ACM Transactions on Database Systems (TODS), vol. 40, pp. 1, 2015.
 """
 import logging
 import math
-import json
 from typing import List, Set
-from dataclasses import dataclass
 
 from loggibud.v1.baselines.task_optimal_location.utils.generator_factories import ( 
   pointsClientsGeneratorFactory
 )
+from loggibud.v1.baselines.task_optimal_location.utils.OLDistance import (
+  OLDistance
+)
 
-from loggibud.v1.types import JSONDataclassMixin, Point
-from loggibud.v1.distances import calculate_distance_matrix_great_circle_m
-
+from loggibud.v1.types import Point
 
 logger = logging.getLogger(__name__)
 #to show on console
 logging.basicConfig(level = logging.INFO)
 
-
-pointsHashTable = {}
-
-@dataclass
-class MinMaxSolution:
-  pass
-
-
-def distance(origin: Point, destination: Point):
-
-  if not (origin, destination) in pointsHashTable:
-    matrixDistance = calculate_distance_matrix_great_circle_m([origin, destination])
-    pointsHashTable[(origin, destination)] = matrixDistance[0][1]
-
-  return pointsHashTable[(origin, destination)]
-
-
-def calculateSumDistance(origins: Set[Point], clients: List[Point]):
+def calculateSumDistance(origins: Set[Point], clients: List[Point], old: OLDistance):
   sumDistance = 0
 
   for client in clients:
     minDistance = math.inf
 
     for origin in origins:
-      dist = distance(origin, client)
+      dist = old.distance(origin, client)
 
       if dist < minDistance:
         minDistance = dist
@@ -64,13 +46,14 @@ def calculateSumDistance(origins: Set[Point], clients: List[Point]):
       
   return sumDistance
 
-def solve(instancesFactory, candidates: List[Point]):
+def solve(instancesFactory, candidates: List[Point], old: OLDistance):
+
   #set comprehension
   origins = { i.origin for i in instancesFactory() }
 
   pointsClientsFactory = pointsClientsGeneratorFactory(instancesFactory)
 
-  currentMinSum = calculateSumDistance(origins, pointsClientsFactory())
+  currentMinSum = calculateSumDistance(origins, pointsClientsFactory(), old)
   
   logger.info(f"The current MinSum is: {currentMinSum}")
   
@@ -80,7 +63,7 @@ def solve(instancesFactory, candidates: List[Point]):
   for candidate in candidates:
     originsWithCandidates = origins.union([candidate])
 
-    newMinSumCandidate = calculateSumDistance(originsWithCandidates, pointsClientsFactory())
+    newMinSumCandidate = calculateSumDistance(originsWithCandidates, pointsClientsFactory(), old)
     minSumSolutionCandidates.append((newMinSumCandidate, candidate))
     
     if newMinSumCandidate < minSumCandidate[0]:
@@ -101,23 +84,25 @@ if __name__ == '__main__':
   from loggibud.v1.baselines.task_optimal_location.utils.generator_factories import (
     instancesGeneratorFactory
   )
+  from loggibud.v1.baselines.task_optimal_location.utils.resolve_arg import (
+    resolve_location_id,
+    resolve_candidates,
+    resolve_calc_method
+  )
 
   from argparse import ArgumentParser
   parser = ArgumentParser()
   parser.add_argument("--location_id", type=str, required=True)
+  parser.add_argument("--candidates", nargs="+", type=float, required=True)
+  parser.add_argument("--calc_method", type=str, required=False)
   args = parser.parse_args()
 
-
-  paths = []
-  with open('./loggibud/v1/baselines/task_optimal_location/resolved_paths.json') as dir:
-    paths = json.load(dir)[args.location_id]
-
+  paths = resolve_location_id(args.location_id)
 
   instances = instancesGeneratorFactory(paths)
 
-  candidates = [
-    Point(lat=-15.7621978, lng=-47.9137767),
-    Point(lat=-15.7035628, lng=-47.8781157)
-  ]
+  candidates = resolve_candidates(args.candidates)
 
-  solve(instances, candidates)
+  old = resolve_calc_method(args.calc_method)
+
+  solve(instances, candidates, old)

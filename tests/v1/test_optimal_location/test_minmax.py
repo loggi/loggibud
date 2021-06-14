@@ -2,11 +2,11 @@ from loggibud.v1.types import Point
 from loggibud.v1.baselines.task_optimal_location.minmax import solve
 
 def test_minsum_solver(
-    mocked_instance,
+    mocked_instances,
     mocked_candidates
   ):
 
-  (current, solution) = solve(mocked_instance, mocked_candidates)
+  (current, solution) = solve(mocked_instances, mocked_candidates)
   (currentMax, currentOrigin, currentClient) = current
   
   assert currentMax == 36831.2314012329

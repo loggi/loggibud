@@ -46,7 +46,7 @@ def calculateSumDistance(origins: Set[Point], clients: List[Point], old: OLDista
       
   return sumDistance
 
-def solve(instancesFactory, candidates: List[Point], old: OLDistance):
+def solve(instancesFactory, candidates: List[Point], old: OLDistance, k: int):
 
   #set comprehension
   origins = { i.origin for i in instancesFactory() }
@@ -87,7 +87,8 @@ if __name__ == '__main__':
   from loggibud.v1.baselines.task_optimal_location.utils.resolve_arg import (
     resolve_location_id,
     resolve_candidates,
-    resolve_calc_method
+    resolve_calc_method,
+    resolve_K
   )
 
   from argparse import ArgumentParser
@@ -95,6 +96,7 @@ if __name__ == '__main__':
   parser.add_argument("--location_id", type=str, required=True)
   parser.add_argument("--candidates", nargs="+", type=float, required=True)
   parser.add_argument("--calc_method", type=str, required=False)
+  parser.add_argument("--k", type=int, required=False)
   args = parser.parse_args()
 
   paths = resolve_location_id(args.location_id)
@@ -105,4 +107,6 @@ if __name__ == '__main__':
 
   old = resolve_calc_method(args.calc_method)
 
-  solve(instances, candidates, old)
+  k = resolve_K(args.k)
+
+  solve(instances, candidates, old, k)

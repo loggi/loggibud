@@ -41,3 +41,11 @@ def resolve_calc_method(calc_method):
     raise ValueError(f"Invalid calc_method. The method should be {valid_calc_methods}, and if not provided distance_matrix_great_circle will be setted by default")
 
   return OLDistance(calc_method)
+
+def resolve_K(k):
+  if k == None:
+    return 1
+  if k < 0:
+    raise ValueError("K must be positive and greater than 0")
+
+  return k

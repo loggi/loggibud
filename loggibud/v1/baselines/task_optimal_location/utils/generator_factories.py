@@ -35,7 +35,7 @@ def instancesGeneratorFactory(paths: List[str]):
   Returns:
       instanceGenerator() -> Generator[JSONDataclassMixin]
   """  
-  def instancesGenerator() -> Generator[JSONDataclassMixin]:
+  def instancesGenerator():
     """Generator[JSONDataclassMixin] Factory with path context given before at 
     instancesGeneratorFactory(paths)
 
@@ -51,7 +51,6 @@ def instancesGeneratorFactory(paths: List[str]):
     )
 
   return instancesGenerator
-
 
 def pointsClientsGeneratorFactory(instancesFactory):
   """This high order function receives a instanceGenerator,
@@ -69,7 +68,7 @@ def pointsClientsGeneratorFactory(instancesFactory):
   Args:
       instanceGenerator():
   """  
-  def pointsClients() -> Generator[Point]:
+  def pointsClients():
     """Clients Factory with instancesGenerator context given
 
     Returns:

@@ -20,12 +20,10 @@ import math
 from typing import List, Set
 
 from loggibud.v1.types import Point
-from loggibud.v1.distances import calculate_distance_matrix_great_circle_m
 
 from loggibud.v1.baselines.task_optimal_location.utils.generator_factories import (
   pointsClientsGeneratorFactory
 )
-
 
 logger = logging.getLogger(__name__)
 #to show on console

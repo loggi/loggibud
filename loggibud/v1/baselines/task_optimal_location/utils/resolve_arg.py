@@ -29,7 +29,7 @@ def resolve_candidates(args):
   for i in range(0, size, 2):
     candidates.append(Point(args[i], args[i+1]))
   
-  return candidates
+  return (candidates, size/2)
 
 def resolve_calc_method(calc_method):
   valid_calc_methods = ["distance_matrix", "route_distance", "distance_matrix_great_circle", "route_distance_great_circle"]
@@ -38,14 +38,17 @@ def resolve_calc_method(calc_method):
     calc_method = "distance_matrix_great_circle"
 
   if not calc_method in valid_calc_methods:
-    raise ValueError(f"Invalid calc_method. The method should be {valid_calc_methods}, and if not provided distance_matrix_great_circle will be setted by default")
+    raise ValueError(f"Invalid calc_method. The method should be one of the: {valid_calc_methods}, and if not provided distance_matrix_great_circle will be setted by default")
 
   return OLDistance(calc_method)
 
-def resolve_K(k):
+def resolve_K(k, len_candidates):
   if k == None:
     return 1
   if k < 0:
-    raise ValueError("K must be positive and greater than 0")
+    raise ValueError("K must greater than 0")
+  if k > len_candidates:
+    print("hi")
+    raise ValueError("K must be positive and greater than the number of candidates")
 
   return k

@@ -13,9 +13,11 @@ Ref:
 Ganglin Mai, Cheng Long, "Optimal Location Queries in Road Networks", 
 ACM Transactions on Database Systems (TODS), vol. 40, pp. 1, 2015.
 """
+import heapq
+from loggibud.v1.baselines.task_optimal_location.utils.OLDistance import OLDistance
 import logging
 import math
-from typing import List, Generator
+from typing import List, Set
 
 from loggibud.v1.types import Point
 from loggibud.v1.distances import calculate_distance_matrix_great_circle_m
@@ -29,27 +31,14 @@ logger = logging.getLogger(__name__)
 #to show on console
 logging.basicConfig(level = logging.INFO)
 
-
-pointsHashTable = {}
-
-def distance(origin: Point, destination: Point):
-
-  if not (origin, destination) in pointsHashTable:
-    matrixDistance = calculate_distance_matrix_great_circle_m([origin, destination])
-    pointsHashTable[(origin, destination)] = matrixDistance[0][1]
-
-  return pointsHashTable[(origin, destination)]
-
-
-def calculateMaxMinDistance(origins: List[Point], clients: Generator[Point]):
+def calculateMaxMinDistance(origins: Set[Point], clients: List[Point], old: OLDistance):
   maxDistance = 0
 
   for client in clients:
-
     minDistance = math.inf
 
     for origin in origins:
-      dist = distance(origin, client)
+      dist = old.distance(origin, client)
       if dist < minDistance:
         minDistance = dist
         originMin = origin
@@ -63,32 +52,35 @@ def calculateMaxMinDistance(origins: List[Point], clients: Generator[Point]):
   return (maxDistance, originMax, clientMax)
 
 
-def solve(instancesFactory, candidates: List[Point]):
+def solve(instancesFactory, candidates: List[Point], old: OLDistance, k: int):
   origins = { i.origin for i in instancesFactory() }
 
   pointsClientsFactory = pointsClientsGeneratorFactory(instancesFactory)
 
-  currentMaxSolution = calculateMaxMinDistance(origins, pointsClientsFactory())
+  currentMaxSolution = calculateMaxMinDistance(origins, pointsClientsFactory(), old)
   
   logger.info(f"The Current MaxSolution is: {currentMaxSolution}")
   
   maxSolutionCandidates = []
-  minDistanceCandidate = math.inf
+  i = 0
 
   for candidate in candidates:
     originsWithCandidates = origins.union([candidate])
     
-    (maxDistance, origin, client) = calculateMaxMinDistance(originsWithCandidates, pointsClientsFactory())
-    maxSolutionCandidates.append((maxDistance, origin, client))
-    
-    if maxDistance < minDistanceCandidate[0]:
-      minDistanceCandidate = (maxDistance, origin, client)
+    (maxDistance, origin, client) = calculateMaxMinDistance(originsWithCandidates, pointsClientsFactory(), old)
+    heapq.heappush(maxSolutionCandidates, (maxDistance, i, origin, client))
+    i = i + 1
+
+  minKCandidates = []
+  for i in range(k):
+    s = heapq.heappop(maxSolutionCandidates)
+    minKCandidates.append((s[0], s[2], s[3]))
 
   logger.info(f"Recalculating, we've got those solutions: {maxSolutionCandidates}")
 
-  logger.info(f"The best solution was: {minDistanceCandidate}")
+  logger.info(f"The best K:{k} solution was: {minKCandidates}")
 
-  return (currentMaxSolution, minDistanceCandidate)
+  return (currentMaxSolution, minKCandidates)
 
 
 
@@ -96,14 +88,34 @@ if __name__ == '__main__':
   from loggibud.v1.baselines.task_optimal_location.utils.generator_factories import (
     instancesGeneratorFactory
   )
+  from loggibud.v1.baselines.task_optimal_location.utils.resolve_arg import (
+    resolve_location_id,
+    resolve_candidates,
+    resolve_calc_method,
+    resolve_K
+  )
 
-  paths = ["./tests/test_instances"]
+  from argparse import ArgumentParser
+  parser = ArgumentParser()
+  parser.add_argument("--location_id", type=str, required=True)
+  parser.add_argument("--candidates", nargs="+", type=float, required=True)
+  parser.add_argument("--calc_method", type=str, required=False)
+  parser.add_argument("--k", type=int, required=False)
+  args = parser.parse_args()
 
-  instances = instancesGeneratorFactory(paths)
+  try:
+    paths = resolve_location_id(args.location_id)
 
-  candidates = [
-    Point(lat=-22.9666855, lng=-43.6941723),
-    Point(lat=-22.9581481, lng=-43.684247)
-  ]
+    instances = instancesGeneratorFactory(paths)
 
-  solve(instances, candidates)
+    (candidates, len_candidates) = resolve_candidates(args.candidates)
+
+    old = resolve_calc_method(args.calc_method)
+
+    k = resolve_K(args.k, len_candidates)
+
+  except ValueError as e:
+    logging.error(e)
+    exit()
+
+  solve(instances, candidates, old, k)

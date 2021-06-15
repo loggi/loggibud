@@ -15,6 +15,8 @@ ACM Transactions on Database Systems (TODS), vol. 40, pp. 1, 2015.
 """
 import logging
 import math
+import heapq
+
 from typing import List, Set
 
 from loggibud.v1.baselines.task_optimal_location.utils.generator_factories import ( 
@@ -47,7 +49,6 @@ def calculateSumDistance(origins: Set[Point], clients: List[Point], old: OLDista
   return sumDistance
 
 def solve(instancesFactory, candidates: List[Point], old: OLDistance, k: int):
-
   #set comprehension
   origins = { i.origin for i in instancesFactory() }
 
@@ -58,26 +59,26 @@ def solve(instancesFactory, candidates: List[Point], old: OLDistance, k: int):
   logger.info(f"The current MinSum is: {currentMinSum}")
   
   minSumSolutionCandidates = []
-  minSumCandidate = (math.inf, 0)
+  i = 0
 
   for candidate in candidates:
     originsWithCandidates = origins.union([candidate])
 
     newMinSumCandidate = calculateSumDistance(originsWithCandidates, pointsClientsFactory(), old)
-    minSumSolutionCandidates.append((newMinSumCandidate, candidate))
-    
-    if newMinSumCandidate < minSumCandidate[0]:
-      minSumCandidate = (newMinSumCandidate, candidate)
+    heapq.heappush(minSumSolutionCandidates, (newMinSumCandidate, i, candidate))
+    i = i + 1
+
+  minKSumSolution = [] 
+
+  for i in range(k):
+    s = heapq.heappop(minSumSolutionCandidates)
+    minKSumSolution.append((s[0], s[2]))
 
   logger.info(f"Recalculating, we've got those solutions: {minSumSolutionCandidates}")
 
-  logger.info(f"The best solution was: {minSumCandidate}")
+  logger.info(f"The best K:{k} solution was: {minKSumSolution}")
 
-  return (currentMinSum, minSumCandidate)
-  
-
-# import timeit
-# start = timeit.default_timer()
+  return (currentMinSum, minKSumSolution)
 
 
 if __name__ == '__main__':
@@ -99,14 +100,19 @@ if __name__ == '__main__':
   parser.add_argument("--k", type=int, required=False)
   args = parser.parse_args()
 
-  paths = resolve_location_id(args.location_id)
+  try:
+    paths = resolve_location_id(args.location_id)
 
-  instances = instancesGeneratorFactory(paths)
+    instances = instancesGeneratorFactory(paths)
 
-  candidates = resolve_candidates(args.candidates)
+    (candidates, len_candidates) = resolve_candidates(args.candidates)
 
-  old = resolve_calc_method(args.calc_method)
+    old = resolve_calc_method(args.calc_method)
 
-  k = resolve_K(args.k)
+    k = resolve_K(args.k, len_candidates)
+
+  except ValueError as e:
+    logging.error(e)
+    exit()
 
   solve(instances, candidates, old, k)

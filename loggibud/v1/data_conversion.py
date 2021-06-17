@@ -18,7 +18,7 @@ class TSPLIBConversionParams(JSONDataclassMixin):
     osrm_config: Optional[OSRMConfig] = None
     """Config for calling OSRM distance service."""
 
-    distance_scaling_factor = 10
+    distance_scaling_factor: int = 10
     """
     Scaling factor for distance matrixes. Scaling is required for solvers that
     operate with integer or fixed point distances.

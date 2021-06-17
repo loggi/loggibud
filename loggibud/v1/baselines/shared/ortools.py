@@ -11,7 +11,7 @@ import numpy as np
 from ortools.constraint_solver import pywrapcp
 from ortools.constraint_solver import routing_enums_pb2
 
-from loggibud.v1.distances import calculate_distance_matrix_m
+from loggibud.v1.distances import calculate_distance_matrix_m, OSRMConfig
 from loggibud.v1.types import (
     CVRPInstance,
     CVRPSolution,
@@ -25,22 +25,18 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ORToolsParams(JSONDataclassMixin):
-    first_solution_strategy: Optional[
-        int
-    ] = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
-    local_search_metaheuristic: Optional[
-        int
-    ] = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+    first_solution_strategy: int = (
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+    )
+    local_search_metaheuristic: int = (
+        routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+    )
     max_vehicles: Optional[int] = None
     solution_limit: Optional[int] = None
     time_limit_ms: Optional[int] = 60_000
 
-    @classmethod
-    def get_baseline(cls):
-        return cls(
-            first_solution_strategy=routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC,
-            local_search_metaheuristic=routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH,
-        )
+    osrm_config: Optional[OSRMConfig] = None
+    """Config for calling OSRM distance service."""
 
 
 def solve(
@@ -50,7 +46,7 @@ def solve(
     """Solves a CVRP instance using ORTools"""
 
     # Initialize parameters if not provided.
-    params = params or ORToolsParams.get_baseline()
+    params = params or ORToolsParams()
 
     # Number of points is the number of deliveries + the origin.
     num_points = len(instance.deliveries) + 1
@@ -88,9 +84,9 @@ def solve(
 
     # Compute the distance matrix between points.
     logger.info("Computing distance matrix.")
-    distance_matrix = (calculate_distance_matrix_m(locations) * 10).astype(
-        np.int32
-    )
+    distance_matrix = (
+        calculate_distance_matrix_m(locations, config=params.osrm_config) * 10
+    ).astype(np.int32)
 
     def distance_callback(src, dst):
         x = manager.IndexToNode(src)

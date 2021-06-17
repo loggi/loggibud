@@ -51,11 +51,13 @@ def test_ortools_solver(
     mocked_ortools_osrm_distance_matrix,
     mocked_osrm_route_distance,
 ):
-    result = ortools.solve(toy_cvrp_instance)
+
+    params = ortools.ORToolsParams(time_limit_ms=3_000)
+    result = ortools.solve(toy_cvrp_instance, params)
 
     total_distance = evaluate_solution(toy_cvrp_instance, result)
 
-    assert total_distance
+    assert total_distance < 600
 
 
 def test_lkh_solver(
@@ -63,8 +65,10 @@ def test_lkh_solver(
     mocked_lkh_osrm_distance_matrix,
     mocked_osrm_route_distance,
 ):
-    result = lkh_3.solve(toy_cvrp_instance)
+
+    params = lkh_3.LKHParams(time_limit_s=3)
+    result = lkh_3.solve(toy_cvrp_instance, params)
 
     total_distance = evaluate_solution(toy_cvrp_instance, result)
 
-    assert total_distance
+    assert total_distance < 600

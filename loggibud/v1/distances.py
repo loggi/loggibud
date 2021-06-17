@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Any
 
 import requests
 import numpy as np
@@ -61,7 +61,7 @@ def calculate_route_distance_m(
 
 
 def calculate_distance_matrix_great_circle_m(
-    points: Iterable[Point],
+    points: Iterable[Point], config: Any = None
 ) -> np.ndarray:
     """Distance matrix using the Great Circle distance
     This is an Euclidean-like distance but on spheres [1]. In this case it is

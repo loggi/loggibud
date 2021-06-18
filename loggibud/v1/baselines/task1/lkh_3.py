@@ -119,6 +119,7 @@ def _unwrap_lkh_solution(
             elif route:
                 yield np.array(route)
                 route = []
+        yield route
 
     delivery_indices = list(route_gen(delivery_indices))
 

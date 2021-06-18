@@ -122,7 +122,7 @@ def _unwrap_lkh_solution(
 
         # Output last route if any
         if route:
-            yield route
+            yield np.array(route)
 
     delivery_indices = list(route_gen(delivery_indices))
 

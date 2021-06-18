@@ -120,6 +120,10 @@ def _unwrap_lkh_solution(
                 yield np.array(route)
                 route = []
 
+        # Output last route if any
+        if route:
+            yield np.array(route)
+
     delivery_indices = list(route_gen(delivery_indices))
 
     # To enable multi-integer indexing, we convert the deliveries into an

@@ -13,3 +13,12 @@ wget -O ./data_raw/15.gpkg -nc 'https://www.ipea.gov.br/geobr/data_gpkg/census_t
 unzip -d ./data_raw -o ./data_raw/RJ_20171016.zip
 unzip -d ./data_raw -o ./data_raw/DF_20171016.zip
 unzip -d ./data_raw -o ./data_raw/PA_20171016.zip
+
+# Ensure the standard of names of the directories generated 
+STATES=('DF' 'PA' 'RJ')
+for state in ${STATES[@]}; do
+  if [[ -e "data_raw/${state}" ]]; then
+    mv -v "$(find data_raw/${state}/Base*${state} -maxdepth 0)" "data_raw/${state}/Base informaçoes setores2010 universo ${state}"
+  fi
+done
+

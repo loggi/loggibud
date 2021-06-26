@@ -5,9 +5,9 @@ wget -P ./data_raw -nc ftp://ftp.ibge.gov.br/Censos/Censo_Demografico_2010/Resul
 
 # Download geographic data from IPEA
 # These files are indexed in "http://www.ipea.gov.br/geobr/metadata/metadata_gpkg.csv"
-wget -P ./data_raw -nc https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/33.gpkg  # RJ
-wget -P ./data_raw -nc https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/53.gpkg  # DF
-wget -P ./data_raw -nc https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/15.gpkg  # PA
+wget -O ./data_raw/33.gpkg -nc 'https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/33census_tract_2010.gpkg'  # RJ
+wget -O ./data_raw/53.gpkg -nc 'https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/53census_tract_2010.gpkg'  # DF
+wget -O ./data_raw/15.gpkg -nc 'https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/15census_tract_2010.gpkg'  # PA
 
 # Unzip.
 unzip -d ./data_raw -o ./data_raw/RJ_20171016.zip

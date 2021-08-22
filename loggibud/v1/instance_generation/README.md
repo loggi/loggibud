@@ -20,8 +20,12 @@ If you don't, you can manually download the data through the following links and
 them into a `data_raw/` directory:
 
 * IBGE Census microdata: ftp://ftp.ibge.gov.br/Censos/Censo_Demografico_2010/Resultados_do_Universo/Agregados_por_Setores_Censitarios/
-* IBGE Census Geodata (by IPEA): https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/33.gpkg
+* IBGE Census Geodata (by IPEA):
+https://www.ipea.gov.br/geobr/data_gpkg/census_tract/2010/33census_tract_2010.gpkg
 
+> OBS: To maintain compliance with the defined file structure,
+> the IPEA geographic data files must be renamed for "33.gpkg" format 
+> (Removing the "census_tract_2010" substring).
 
 Make sure your final file structure looks like:
 

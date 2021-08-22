@@ -3,7 +3,6 @@ import json
 import pytest
 from dacite import from_dict
 from mock import patch
-from pathlib import Path
 
 from loggibud.v1.types import CVRPInstance
 from loggibud.v1.baselines.shared.ortools import ORToolsParams
@@ -16,27 +15,13 @@ from loggibud.v1.eval.task1 import evaluate_solution
 
 
 @pytest.fixture
-def train_instances():
-    file_instances = Path("tests/results/cvrp-instances/train/rj-0/").rglob(
-        "*.json"
-    )
-
-    def load_instance(file_instance):
-        with open(file_instance) as f:
-            data = json.load(f)
-
-        return from_dict(CVRPInstance, data)
-
-    instances = [
-        load_instance(file_instance) for file_instance in file_instances
-    ]
-
-    return instances
+def train_instances(toy_cvrp_instance):
+    return [toy_cvrp_instance]
 
 
 @pytest.fixture
 def dev_instance():
-    with open("tests/results/cvrp-instances/dev/rj-0/cvrp-0-rj-3.json") as f:
+    with open("tests/test_instances/cvrp-0-rj-3.json") as f:
         data = json.load(f)
 
     return from_dict(CVRPInstance, data)
@@ -57,9 +42,12 @@ def mocked_ortools_osrm_distance_matrix():
 def mocked_osrm_route_distance():
     """Monkey-patch the OSRM route distance with the Great Circle"""
 
+    def _mocked_calculate_route_distance_m(points, config=None):
+        return calculate_route_distance_great_circle_m(points)
+
     with patch(
         "loggibud.v1.eval.task1.calculate_route_distance_m",
-        new=calculate_route_distance_great_circle_m,
+        new=_mocked_calculate_route_distance_m,
     ) as mock_osrm:
         yield mock_osrm
 

@@ -9,9 +9,7 @@ BASE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 CENSUS_INCOME_FILES = {
     "rj": f"{BASE_PATH}/../../../data_raw/RJ/Base informaçoes setores2010 universo RJ/CSV/DomicilioRenda_RJ.csv",
-
-    # Note that there's a bug on DF file name.
-    "df": f"{BASE_PATH}/../../../data_raw/DF/Base informaЗoes setores2010 universo DF/CSV/DomicilioRenda_DF.csv",
+    "df": f"{BASE_PATH}/../../../data_raw/DF/Base informaçoes setores2010 universo DF/CSV/DomicilioRenda_DF.csv",
     "pa": f"{BASE_PATH}/../../../data_raw/PA/Base informaçoes setores2010 universo PA/CSV/DomicilioRenda_PA.csv",
 }
 
@@ -72,7 +70,9 @@ def load_income_per_sector(uf):
     )
 
     # Sector code to string.
-    census_income_df["code_tract"] = census_income_df.Cod_setor.apply(lambda s: str(s))
+    census_income_df["code_tract"] = census_income_df.Cod_setor.apply(
+        lambda s: str(s)
+    )
 
     # Total income (V002) to int removing empty fields.
     census_income_df["total_income"] = census_income_df.V002.apply(int_or_zero)
@@ -96,7 +96,9 @@ def prepare_census_data(instance_name):
     census_geo_df = load_geodata_per_sector(INSTANCE_UF[instance_name])
     census_income_df = load_income_per_sector(INSTANCE_UF[instance_name])
 
-    tract_df = pd.merge(left=census_geo_df, right=census_income_df, on="code_tract")
+    tract_df = pd.merge(
+        left=census_geo_df, right=census_income_df, on="code_tract"
+    )
 
     municipalities = MUNICIPALITIES[instance_name]
     tract_df = tract_df[tract_df.name_muni.str.lower().isin(municipalities)]

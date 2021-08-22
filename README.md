@@ -12,7 +12,7 @@ To get started with the development using LoggiBUD, check out our
 
 # Dataset
 
-The dataset simulates the challange of a large delivery company in the
+The dataset simulates the challenge of a large delivery company in the
 last-mile step of the supply chain. Worldwide, metropolitan areas like Rio de
 Janeiro witness the delivery of tens or even hundreds of thousands of parcels
 and mail.  Deliveries on those areas are unexpectedly very unevenly
@@ -89,7 +89,7 @@ to real-world last-mile problems. Some of them include:
 * Ignore streets, use only euclidean distances
 * No discussion on aggregation levels
 
-Most instances also fail to model real challanges of dynamic and stochastic
+Most instances also fail to model real challenges of dynamic and stochastic
 instances, where the stochastic information is usually presented as
 probabilities on deterministic points. We instead present stochastic
 information as historical deliveries performed under the same distribution.
@@ -121,7 +121,7 @@ solution.
 
 If you want more details on how we generate our instances and how they relate
 to actual deliveries, please check our [generation pipeline
-documentation](./generation.md). It also includes the steps for reproducing the
+documentation](./loggibud/v1/instance_generation/). It also includes the steps for reproducing the
 provided instances.
 
 

@@ -49,7 +49,10 @@ import numpy as np
 from tqdm import tqdm
 
 from loggibud.v1.types import (
-    Delivery, CVRPInstance, CVRPSolution, CVRPSolutionVehicle
+    Delivery,
+    CVRPInstance,
+    CVRPSolution,
+    CVRPSolutionVehicle,
 )
 from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
@@ -99,8 +102,7 @@ class QRPModel:
         """
 
         point_translated = (
-            np.array([delivery.point.lng, delivery.point.lat])
-            - self.center
+            np.array([delivery.point.lng, delivery.point.lat]) - self.center
         )
         angle = np.arctan2(point_translated[1], point_translated[0])
 

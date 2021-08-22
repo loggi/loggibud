@@ -1,18 +1,25 @@
 from pathlib import Path
 from argparse import ArgumentParser
+from typing import Optional
 
-from ..distances import calculate_route_distance_m
+from ..distances import calculate_route_distance_m, OSRMConfig
 from ..types import CVRPInstance, CVRPSolution
 
 
-def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
+def evaluate_solution(
+    instance: CVRPInstance,
+    solution: CVRPSolution,
+    config: Optional[OSRMConfig] = None,
+) -> float:
 
     # Check if all demands are present.
     solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
     assert solution_demands == set(instance.deliveries)
 
     # Check if max capacity is respected.
-    max_capacity = max(sum(d.size for d in v.deliveries) for v in solution.vehicles)
+    max_capacity = max(
+        sum(d.size for d in v.deliveries) for v in solution.vehicles
+    )
     assert max_capacity <= instance.vehicle_capacity
 
     # Check if maximum number of origins is consistent.
@@ -20,7 +27,8 @@ def evaluate_solution(instance: CVRPInstance, solution: CVRPSolution):
     assert len(origins) <= 1
 
     route_distances_m = [
-        calculate_route_distance_m(v.circuit) for v in solution.vehicles
+        calculate_route_distance_m(v.circuit, config=config)
+        for v in solution.vehicles
     ]
 
     # Convert to km.
@@ -60,6 +68,8 @@ if __name__ == "__main__":
 
     stems = instances.keys()
 
-    results = [evaluate_solution(instances[stem], solutions[stem]) for stem in stems]
+    results = [
+        evaluate_solution(instances[stem], solutions[stem]) for stem in stems
+    ]
 
     print(sum(results))

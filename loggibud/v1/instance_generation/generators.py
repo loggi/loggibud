@@ -88,7 +88,9 @@ def generate_deliveries(
         while True:
             # Generate using a uniform distribution inside the bounding box.
             minx, miny, maxx, maxy = polygon.bounds
-            p = ShapelyPoint(random.uniform(minx, maxx), random.uniform(miny, maxy))
+            p = ShapelyPoint(
+                random.uniform(minx, maxx), random.uniform(miny, maxy)
+            )
 
             # If is contained, return.
             if polygon.contains(p):
@@ -199,7 +201,9 @@ def generate_cvrp_subinstances(
 
     # Compute the number of deliveries in every cluster.
     cluster_weights = Counter(clusters)
-    demands = np.array([cluster_weights[i] for i in range(config.num_clusters)])
+    demands = np.array(
+        [cluster_weights[i] for i in range(config.num_clusters)]
+    )
 
     # Compute the street distance between points.
     logger.info("Computing distances between clusters.")
@@ -219,7 +223,8 @@ def generate_cvrp_subinstances(
 
     # Map every cluster into a hub.
     hub_allocations = {
-        i: [j for j, a in enumerate(row) if a] for i, row in enumerate(allocations)
+        i: [j for j, a in enumerate(row) if a]
+        for i, row in enumerate(allocations)
     }
 
     def aggregate_subinstances(instance):
@@ -233,14 +238,20 @@ def generate_cvrp_subinstances(
         cluster_deliveries = {
             key: [d for _, d in group]
             for key, group in itertools.groupby(
-                sorted(zip(cluster_index, instance.deliveries), key=lambda v: v[0]),
+                sorted(
+                    zip(cluster_index, instance.deliveries), key=lambda v: v[0]
+                ),
                 key=lambda v: v[0],
             )
         }
 
         # Aggregate clusters into subinstances according to the hub assignment.
         subinstance_deliveries = [
-            [d for cluster in clusters for d in cluster_deliveries.get(cluster, [])]
+            [
+                d
+                for cluster in clusters
+                for d in cluster_deliveries.get(cluster, [])
+            ]
             for hub_cluster, clusters in hub_allocations.items()
             if clusters
         ]

@@ -8,7 +8,10 @@ representative of the challenges we face on real world deliveries for the
 problems outlined in the repository.
 
 To get started with the development using LoggiBUD, check out our 
-[quickstart tutorial](./docs/quickstart.md).
+[quickstart tutorial](./docs/quickstart.md). If you want to learn how to solve
+large-scale delivery problems, check our [Introductory course 
+(in Portuguese)](./docs/loggibud_univesp.md) developed in partnership with
+The Virtual University of the State of São Paulo (Univesp).
 
 # Dataset
 

@@ -6,15 +6,14 @@ authors = ["Gabriela Surita <gsurita@loggi.com>", "Fillipe Goulart <fillipe.mend
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.7.1"
-numpy = "^1.20.2"
+python = ">=3.7"
+numpy = ">=1.19.2,<1.20.0"
 requests = "^2.25.1"
 dacite = "^1.6.0"
 tqdm = "^4.60.0"
-ortools = "^8.2.8710"
+ortools = "9.0.*"
 sklearn = "^0.0"
 Shapely = "^1.7.1"
-pandas = "^1.2.3"
 geopandas = "^0.9.0"
 folium = "^0.12.1"
 polyline = "^1.4.0"

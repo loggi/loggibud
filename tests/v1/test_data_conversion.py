@@ -25,3 +25,15 @@ def test_can_create_proper_tsplib_from_instance(
     assert toy_cvrp_instance.name in tspfile
     assert "ACVRP" in tspfile
     assert str(toy_cvrp_instance.vehicle_capacity) in tspfile
+
+
+def test_can_create_proper_tsplib_competition_from_instance(
+    toy_cvrp_instance, mocked_osrm_distance_matrix
+):
+    tsplib_instance = data_conversion.to_tsplib_competition(toy_cvrp_instance)
+    tspfile = str(tsplib_instance)
+
+    assert toy_cvrp_instance.name in tspfile
+    assert "CVRP" in tspfile
+    assert "NODE_COORD_SECTION" in tspfile
+    assert str(toy_cvrp_instance.vehicle_capacity) in tspfile

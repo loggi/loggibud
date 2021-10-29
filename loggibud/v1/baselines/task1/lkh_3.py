@@ -24,7 +24,7 @@ from loggibud.v1.types import (
     JSONDataclassMixin,
 )
 from loggibud.v1.distances import OSRMConfig
-from loggibud.v1.data_conversion import to_tsplib, TSPLIBConversionParams
+from loggibud.v1.data_conversion import to_tsplib_competition, TSPLIBConversionParams
 
 
 logger = logging.getLogger(__name__)
@@ -51,7 +51,7 @@ def solve(
     params = params or LKHParams()
 
     conversion_params = TSPLIBConversionParams(osrm_config=params.osrm_config)
-    tsplib_instance = to_tsplib(instance, conversion_params)
+    tsplib_instance = to_tsplib_competition(instance, conversion_params)
 
     # LKH solution params, for details check the LKH documentation.
     lkh_params = dict(
@@ -68,6 +68,30 @@ def solve(
 
     solution = _unwrap_lkh_solution(instance, lkh_solution)
 
+    # Gambiarra to compute the LKH-3 solution directly
+    delivery_indices = {
+        delivery.id: i for i, delivery in enumerate(solution.deliveries, start=1)
+    }
+    distance_matrix_flattened = np.array([
+        tsplib_instance.get_weight(*edge) for edge in tsplib_instance.get_edges()
+    ])
+    distance_matrix = np.reshape(
+        distance_matrix_flattened,
+        (tsplib_instance.dimension, tsplib_instance.dimension),
+    )
+
+    def compute_vehicle_distance(vehicle):
+        from_ = [0] + [
+            delivery_indices[delivery.id] for delivery in vehicle.deliveries
+        ]
+        to_ = from_[1:] + from_[:1]
+        return distance_matrix[from_, to_].sum()
+
+    total_distance = sum(
+        compute_vehicle_distance(vehicle) for vehicle in solution.vehicles
+    )
+
+    import ipdb; ipdb.set_trace()
     return solution
 
 

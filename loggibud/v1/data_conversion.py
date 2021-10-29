@@ -119,20 +119,25 @@ def to_tsplib_competition(
     # main diagonal
     scaled_matrix_triu = np.tril(scaled_matrix.astype(np.int32)).tolist()
     edge_weights = [
-        row[:i] for i, row in enumerate(scaled_matrix_triu, start=1)
+        row[:i] for i, row in enumerate(scaled_matrix_triu[1:], start=1)
     ]
 
     problem = tsplib95.models.StandardProblem(
         name=instance.name,
         type="CVRP",
+        comment="LoggiBUD Instance",
         dimension=num_deliveries + 1,
         node_coords=node_coords,
+        node_coord_type="TWOD_COORDS",
         edge_weight_type="EXPLICIT",
-        edge_weight_format="LOWER_DIAG_ROW",
+        edge_weight_format="LOWER_ROW",
         edge_weights=edge_weights,
         demands=demands_section,
         capacity=instance.vehicle_capacity,
         depots=[1],
     )
+
+    with open(f"{instance.name}.vrp", "w") as f:
+        problem.write(f)
 
     return problem

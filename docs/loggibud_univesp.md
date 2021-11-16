@@ -5,6 +5,11 @@ Desafio LoggiBUD (Univesp)
 It was developed in colaboration with The Virtual University of the State of São Paulo.
 All the content is in Portuguese, but we welcome contributions to translate it to other languages.*
 
+# Pré-requisitos Do Curso
+Entery Level Knowledage of python 
+Familarty with colab 
+
+
 # Conteúdo do curso
 
 ## Boas Vindas

@@ -1,5 +1,5 @@
-Workshop Loggi: Resultados do Programa de Bolsas de Pesquisa
-============================================================
+Workshop Loggi: Resultados do Programa de Bolsas de Pesquisa (PBP-Loggi)
+========================================================================
 
 This page contains the proceedings for the Loggi Scholarship Program results. It presents the structure of the event, followed by the papers produced by the students.
 

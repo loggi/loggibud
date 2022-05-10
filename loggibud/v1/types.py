@@ -112,6 +112,7 @@ class CVRPSolutionVehicle:
 class CVRPSolution(JSONDataclassMixin):
     name: str
     vehicles: List[CVRPSolutionVehicle]
+    time_exec: float = 0.0 #???
 
     @property
     def deliveries(self):

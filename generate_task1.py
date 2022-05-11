@@ -79,7 +79,7 @@ def execute_methods_loggibud():
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     for method in methods:
         for city in cities:
-            for i in range(num_days):
+            for i in range(90,90+num_days):
                 output_complement = output + method + '/' + city + '/'
                 cit = city.split("-")
                 instance = "cvrp-"+str(cit[1])+"-"+str(cit[0])+"-"+str(i)+".json"

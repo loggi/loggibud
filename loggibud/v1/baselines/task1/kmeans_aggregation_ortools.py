@@ -22,6 +22,7 @@ import numpy as np
 from sklearn.cluster import MiniBatchKMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery
+from loggibud.v1.distances import *
 from ..shared.ortools import solve as ortools_solve, ORToolsParams
 
 
@@ -50,6 +51,7 @@ class KmeansAggregateORToolsParams:
 
 def solve(
     instance: CVRPInstance,
+    osrm_config: OSRMConfig,
     params: Optional[KmeansAggregateORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
 
@@ -84,6 +86,8 @@ def solve(
             origin=instance.origin,
             vehicle_capacity=instance.vehicle_capacity,
         )
+
+        params.cluster_ortools_params.osrm_config = osrm_config
 
         cluster_solution = ortools_solve(
             cluster_instance, params.cluster_ortools_params

@@ -21,6 +21,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution
+from loggibud.v1.distances import OSRMConfig
 from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
     ORToolsParams,
@@ -51,6 +52,7 @@ class KmeansPartitionORToolsParams:
 
 def solve(
     instance: CVRPInstance,
+    osrm_config: OSRMConfig,
     params: Optional[KmeansPartitionORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
 

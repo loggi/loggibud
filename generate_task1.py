@@ -1,6 +1,7 @@
 import csv
 import json
 from matplotlib import pyplot as plt
+import time
 import pandas as pd
 
 from loggibud.v1.distances import OSRMConfig
@@ -27,21 +28,21 @@ def ploter_map(number):
 
 def solve_with_lkh3(osrm_config, input:str, output: str):
   instance = CVRPInstance.from_file(input)
+  start = time.time()
   lkh_params = lkh_3.LKHParams(osrm_config=osrm_config)
-  start = 0.0
   solution = lkh_3.solve(instance, params=lkh_params)
-  finish = 0.0
+  finish = time.time()
   output_dir = Path(output or '.')
   output_dir.mkdir(parents=True, exist_ok=True)
-  solution.to_file(output_dir / f"{instance.name}.json")
   solution.time_exec = finish-start
+  solution.to_file(output_dir / f"{instance.name}.json")
   return solution
 
 def solve_partition(osrm_config, input:str, output: str):
   instance = CVRPInstance.from_file(input)
-  start = 0.0
-  solution = kmeans_partition_ortools.solve(instance)
-  finish = 0.0
+  start = time.time()
+  solution = kmeans_partition_ortools.solve(instance, osrm_config = osrm_config)
+  finish = time.time()
   output_dir = Path(output or '.')
   output_dir.mkdir(parents=True, exist_ok=True)
   solution.time_exec = finish-start
@@ -50,9 +51,9 @@ def solve_partition(osrm_config, input:str, output: str):
   
 def solve_aggregation(osrm_config, input:str, output: str):
   instance = CVRPInstance.from_file(input)
-  start = 0.0
-  solution = kmeans_aggregation_ortools.solve(instance)
-  finish = 0.0
+  start = time.time()
+  solution = kmeans_aggregation_ortools.solve(instance, osrm_config = osrm_config)
+  finish = time.time()
   output_dir = Path(output or '.')
   output_dir.mkdir(parents=True, exist_ok=True)
   solution.time_exec = finish-start  
@@ -62,17 +63,16 @@ def solve_aggregation(osrm_config, input:str, output: str):
 def solve_loggibud(alg: str, osrm_config, input: str, output: str):
   if alg == "lkh3":
     return solve_with_lkh3(osrm_config, input, output)
-  elif alg == "kmeans-aggregation":
+  if alg == "kmeans-aggregation":
     return solve_aggregation(osrm_config, input, output)
-  elif alg == "kmeans-partition":
+  if alg == "kmeans-partition":
     return solve_partition(osrm_config, input, output)
-  else:
-    return "Not implemented"
+  return "Not implemented"
 
 def execute_methods_loggibud():
-    methods = ["lkh3", "kmeans-aggregation", "kmeans-partition"]
-    cities = ["pa-0", "df-0", "rj-0"]
-    num_days = 20
+    methods = ["kmeans-partition"]
+    cities = ["rj-0"]
+    num_days = 30
     input_dir = "./data/cvrp-instances-1.0/dev/"
     output = "../output/"
   
@@ -84,6 +84,7 @@ def execute_methods_loggibud():
                 cit = city.split("-")
                 instance = "cvrp-"+str(cit[1])+"-"+str(cit[0])+"-"+str(i)+".json"
                 input = input_dir + city + "/" + instance
+                print(input)
                 solution = solve_loggibud(method, osrm_config, input, output_complement)
 
 def main():

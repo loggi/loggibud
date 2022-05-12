@@ -35,7 +35,7 @@ class ORToolsParams(JSONDataclassMixin):
     solution_limit: Optional[int] = None
     time_limit_ms: Optional[int] = 60_000
 
-    osrm_config: Optional[OSRMConfig] = None
+    osrm_config: Optional[OSRMConfig] = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     """Config for calling OSRM distance service."""
 
 

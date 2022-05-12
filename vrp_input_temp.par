@@ -1,0 +1,7 @@
+SPECIAL
+PROBLEM_FILE = vrp_input_temp.vrp
+MTSP_OBJECTIVE = MINSUM
+RUNS = 1
+TOUR_FILE = vrp_output_temp.vrp
+TIME_LIMIT = 60
+VEHICLES = 10

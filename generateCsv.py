@@ -4,27 +4,30 @@ import json
 from loggibud.v1.eval.task1 import evaluate_solution
 from loggibud.v1.types import *
 # Gerar 1 arquivo Geral sobre dados comparativos
-# Algorithm | input | K | distance | n_veiculos | VAR(dif de max e min de pacotes\\veiculos) | time 
+# Algorithm | input | distance | time | n_veiculos | VAR(dif de max e min de pacotes\\veiculos) 
 # Ler arquivo por arquivo
 # Captar os dados desejados
 def generateGeneralCsv(
     path_outcsv: str, 
     city: str, 
     output: str, 
-    path_input: str
+    path_input: str,
+    method: str
 ):
-    output = output + city + "\\"
+    output = output + city + "\\" + method + "\\"
     path_input = path_input + city + "\\"
-    head = ["Algorithm", "input", "K", "distance", "n_veiculos", "time"]
+    name = "cvrp-"+city.split("-")[1]+"-"+city.split("-")[0]+"-"
+    head = ["Algorithm", "input", "distance", "time", "n_veiculos"]
     f = open(path_outcsv, 'w', newline='', encoding='utf-8')
     w = csv.writer(f)
     # Construir Cabeçalho
     w.writerow(head) 
     # Read city per city
     outputs = [
-        os.path.join(output, solution) 
-        for solution in os.listdir(output)
+        output+name+str(i)+".json"
+        for i in range(90,120)
     ]
+    # print(outputs)
     for sol_path in outputs:
         path_broke = sol_path.split('\\')
         name_instance = path_broke[len(path_broke)-1]
@@ -34,7 +37,6 @@ def generateGeneralCsv(
         root = json.load(jfile) 
         line = ["KPPRRF"]
         line.append(root['name'])
-        line.append(root['k-regions'])
         instance = {"": CVRPInstance.from_file(inst_path)}
         solution = {"": CVRPSolution.from_file(sol_path)}
         stems = instance.keys()
@@ -76,14 +78,18 @@ def computeCapacityRoute(vehicle):
 def main():    
     path_outcsv = "output\\csvs\\general.csv"
     city = "pa-0" 
-    output = "data\\cvrp-instances-1.0\\benchs\\"
-    path_input = "data\\cvrp-instances-1.0\\train\\"
-    generateGeneralCsv(
-        path_outcsv, 
-        city, 
-        output, 
-        path_input
-    )
+    output = "data\\results\\"
+    path_input = "data\\cvrp-instances-1.0\\dev\\"
+    methods = ["lkh3", "kmeans-partition", "kmeans-aggregation", "kpprrf"]
+    for method in methods:
+        if method == "kpprrf":
+            generateGeneralCsv(
+                path_outcsv, 
+                city, 
+                output, 
+                path_input,
+                method
+            )
 
 if __name__ == "__main__":
     main()

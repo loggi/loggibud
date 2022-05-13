@@ -102,6 +102,12 @@ class CVRPSolutionVehicle:
         return (
             [self.origin] + [d.point for d in self.deliveries] + [self.origin]
         )
+    
+    @property
+    def no_return(self) -> List[Point]:
+        return (
+            [self.origin] + [d.point for d in self.deliveries]
+        )
 
     @property
     def occupation(self) -> int:

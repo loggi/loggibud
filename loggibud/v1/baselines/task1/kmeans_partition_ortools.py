@@ -21,6 +21,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from loggibud.v1.types import CVRPInstance, CVRPSolution
+from loggibud.v1.distances import OSRMConfig
 from loggibud.v1.baselines.shared.ortools import (
     solve as ortools_solve,
     ORToolsParams,
@@ -51,6 +52,7 @@ class KmeansPartitionORToolsParams:
 
 def solve(
     instance: CVRPInstance,
+    osrm_config: OSRMConfig,
     params: Optional[KmeansPartitionORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
 
@@ -59,17 +61,13 @@ def solve(
     num_deliveries = len(instance.deliveries)
     num_clusters = int(
         params.fixed_num_clusters
-        or np.ceil(
-            num_deliveries / (params.variable_num_clusters or num_deliveries)
-        )
+        or np.ceil(num_deliveries / (params.variable_num_clusters or num_deliveries))
     )
 
     logger.info(f"Clustering instance into {num_clusters} subinstances")
     clustering = KMeans(num_clusters, random_state=params.seed)
 
-    points = np.array(
-        [[d.point.lng, d.point.lat] for d in instance.deliveries]
-    )
+    points = np.array([[d.point.lng, d.point.lat] for d in instance.deliveries])
     clusters = clustering.fit_predict(points)
 
     delivery_array = np.array(instance.deliveries)
@@ -81,6 +79,7 @@ def solve(
     subinstances = [
         CVRPInstance(
             name=instance.name,
+            region=instance.region,
             deliveries=subinstance.tolist(),
             origin=instance.origin,
             vehicle_capacity=instance.vehicle_capacity,

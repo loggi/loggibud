@@ -21,13 +21,9 @@ from typing import Optional
 import numpy as np
 from sklearn.cluster import MiniBatchKMeans
 
-from loggibud.v1.types import (
-    CVRPInstance,
-    CVRPSolution,
-    CVRPSolutionVehicle,
-    Delivery,
-)
-from ..shared.ortools import solve_cvrp as ortools_solve, ORToolsParams
+from loggibud.v1.types import CVRPInstance, CVRPSolution, CVRPSolutionVehicle, Delivery
+from loggibud.v1.distances import *
+from ..shared.ortools import solve as ortools_solve, ORToolsParams
 
 
 logger = logging.getLogger(__name__)
@@ -55,6 +51,7 @@ class KmeansAggregateORToolsParams:
 
 def solve(
     instance: CVRPInstance,
+    osrm_config: OSRMConfig,
     params: Optional[KmeansAggregateORToolsParams] = None,
 ) -> Optional[CVRPSolution]:
 
@@ -62,16 +59,14 @@ def solve(
 
     num_deliveries = len(instance.deliveries)
     num_clusters = int(
-        params.fixed_num_clusters
-        or np.ceil(num_deliveries / (params.variable_num_clusters or 1))
+        params.fixed_num_clusters or
+        np.ceil(num_deliveries / (params.variable_num_clusters or 1))
     )
 
     logger.info(f"Clustering instance into {num_clusters} subinstances")
     clustering = MiniBatchKMeans(num_clusters, random_state=params.seed)
 
-    points = np.array(
-        [[d.point.lng, d.point.lat] for d in instance.deliveries]
-    )
+    points = np.array([[d.point.lng, d.point.lat] for d in instance.deliveries])
     clusters = clustering.fit_predict(points)
 
     delivery_array = np.array(instance.deliveries)
@@ -86,10 +81,13 @@ def solve(
 
         cluster_instance = CVRPInstance(
             name=instance.name,
+            region=instance.region,
             deliveries=deliveries,
             origin=instance.origin,
             vehicle_capacity=instance.vehicle_capacity,
         )
+
+        params.cluster_ortools_params.osrm_config = osrm_config
 
         cluster_solution = ortools_solve(
             cluster_instance, params.cluster_ortools_params
@@ -117,6 +115,7 @@ def solve(
 
     aggregated_instance = CVRPInstance(
         name=instance.name,
+        region=instance.region,
         deliveries=aggregated_deliveries,
         origin=instance.origin,
         vehicle_capacity=instance.vehicle_capacity,
@@ -130,11 +129,8 @@ def solve(
             deliveries=[
                 d
                 for v in solve_cluster(
-                    [
-                        d
-                        for groups in v.deliveries
-                        for d in subsolutions[int(groups.id)]
-                    ]
+                    [d for groups in v.deliveries for d in subsolutions[int(
+                        groups.id)]]
                 )
                 for d in v
             ],

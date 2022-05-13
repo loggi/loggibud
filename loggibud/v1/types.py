@@ -102,6 +102,12 @@ class CVRPSolutionVehicle:
         return (
             [self.origin] + [d.point for d in self.deliveries] + [self.origin]
         )
+    
+    @property
+    def no_return(self) -> List[Point]:
+        return (
+            [self.origin] + [d.point for d in self.deliveries]
+        )
 
     @property
     def occupation(self) -> int:
@@ -112,6 +118,7 @@ class CVRPSolutionVehicle:
 class CVRPSolution(JSONDataclassMixin):
     name: str
     vehicles: List[CVRPSolutionVehicle]
+    time_exec: float = 0.0 #???
 
     @property
     def deliveries(self):

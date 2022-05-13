@@ -27,7 +27,7 @@ def evaluate_solution(
     assert len(origins) <= 1
 
     route_distances_m = [
-        calculate_route_distance_m(v.circuit, config=config)
+        calculate_route_distance_m(v.no_return, config=config)
         for v in solution.vehicles
     ]
 

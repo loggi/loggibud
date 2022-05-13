@@ -7,8 +7,7 @@ from multiprocessing import Pool
 
 from tqdm import tqdm
 
-from loggibud.v1.types import CVRPInstance
-
+from loggibud.v1.types import CVRPInstance, CVRPSolution
 
 if __name__ == "__main__":
 
@@ -27,9 +26,7 @@ if __name__ == "__main__":
     # Load method from path.
     module = importlib.import_module(args.module)
     method = getattr(module, args.method)
-    params_class = (
-        getattr(module, args.params_class) if args.params_class else None
-    )
+    params_class = getattr(module, args.params_class) if args.params_class else None
 
     # Load instance and heuristic params.
     path = Path(args.instances)

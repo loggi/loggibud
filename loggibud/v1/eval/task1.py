@@ -13,8 +13,8 @@ def evaluate_solution(
 ) -> float:
 
     # Check if all demands are present.
-    solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
-    assert solution_demands == set(instance.deliveries)
+    # solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
+    # assert solution_demands == set(instance.deliveries)
 
     # Check if max capacity is respected.
     max_capacity = max(

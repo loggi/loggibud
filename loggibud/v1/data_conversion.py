@@ -48,8 +48,10 @@ def to_tsplib(
     distance_matrix = calculate_distance_matrix_m(
         locations, config=params.osrm_config
     )
-    scaled_matrix = distance_matrix * params.distance_scaling_factor
-
+    # print(distance_matrix)
+    # print(params.distance_scaling_factor)
+    scaled_matrix = np.ndarray(distance_matrix) * params.distance_scaling_factor
+    
     problem = tsplib95.models.StandardProblem(
         name=instance.name,
         type="ACVRP",

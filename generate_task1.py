@@ -70,8 +70,8 @@ def solve_loggibud(alg: str, osrm_config, input: str, output: str):
   return "Not implemented"
 
 def execute_methods_loggibud():
-    methods = ["kmeans-partition"]
-    cities = ["rj-0"]
+    methods = ["lkh3", "kmeans-partition", "kmeans-aggregation"]
+    cities = ["pa-1", "df-1", "df-2", "rj-1", "rj-2"]
     num_days = 30
     input_dir = "./data/cvrp-instances-1.0/dev/"
     output = "../output/"
@@ -85,7 +85,10 @@ def execute_methods_loggibud():
                 instance = "cvrp-"+str(cit[1])+"-"+str(cit[0])+"-"+str(i)+".json"
                 input = input_dir + city + "/" + instance
                 print(input)
-                solution = solve_loggibud(method, osrm_config, input, output_complement)
+                try:
+                  solution = solve_loggibud(method, osrm_config, input, output_complement)
+                except Exception as e:
+                  print(e)
 
 def main():
     execute_methods_loggibud()

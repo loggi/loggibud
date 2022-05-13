@@ -123,3 +123,14 @@ class CVRPSolution(JSONDataclassMixin):
     @property
     def deliveries(self):
         return [d for v in self.vehicles for d in v.deliveries]
+@dataclass
+class CVRPSolutionKpprrf(JSONDataclassMixin):
+    k_regions: int
+    name: str
+    time_execution: float
+    total_vehicles: int
+    vehicles: List[CVRPSolutionVehicle]
+
+    @property
+    def deliveries(self):
+        return [d for v in self.vehicles for d in v.deliveries]

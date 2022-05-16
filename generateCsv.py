@@ -21,6 +21,9 @@ def rowCreateBasicsMethods(inst_path, sol_path, w, method, osrm_config):
     w.writerow(line)
 
 def rowCreateKpprrf(inst_path, sol_path, w, method, osrm_config):
+    pathsa = sol_path.split('/')
+    path_s = pathsa[0]+"/"+pathsa[1]+"/kmeansp/"+pathsa[3]+pathsa[4].split(".")[0] + "-kmeans.json"
+    solKmeans = KmeansSolution.from_file(path_s)
     line = [method]
     instance = {"": CVRPInstance.from_file(inst_path)}
     solution = CVRPSolutionKpprrf.from_file(sol_path)
@@ -31,7 +34,7 @@ def rowCreateKpprrf(inst_path, sol_path, w, method, osrm_config):
         evaluate_solution(instance[stem], sol[stem], osrm_config) for stem in stems
     ]
     line.append(sum(results))
-    line.append(solution.time_execution)
+    line.append(solution.time_execution + solKmeans.time_execution)
     line.append(solution.total_vehicles)
     w.writerow(line)
     # instance_broke = inst_path.split('.')

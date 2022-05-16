@@ -134,3 +134,13 @@ class CVRPSolutionKpprrf(JSONDataclassMixin):
     @property
     def deliveries(self):
         return [d for v in self.vehicles for d in v.deliveries]
+@dataclass
+class KmeansSolution(JSONDataclassMixin):
+    num_vehicles: int
+    time_execution: float
+    n_clusters: int
+    total_points: int
+
+    @property
+    def deliveries(self):
+        return [d for v in self.vehicles for d in v.deliveries]

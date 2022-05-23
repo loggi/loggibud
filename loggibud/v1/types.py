@@ -37,6 +37,19 @@ class Point:
     lat: float
     """Latitude (y axis)."""
 
+@dataclass(unsafe_hash=True)
+class DeliveryOPT:
+    """A delivery request."""
+    id: int
+    """Unique id."""
+
+    point: Point
+    """Delivery location."""
+
+    size: int
+    """Size it occupies in the vehicle (considered 1-D for simplicity)."""
+
+    idu: int
 
 @dataclass(unsafe_hash=True)
 class Delivery:
@@ -86,6 +99,22 @@ class CVRPInstance(JSONDataclassMixin):
 
     deliveries: List[Delivery]
     """List of deliveries to be solved."""
+@dataclass
+class CVRPInstanceOPT(JSONDataclassMixin):
+    name: str
+    """Unique name of this instance."""
+
+    region: str
+    """Region name."""
+
+    origin: Point
+    """Location of the origin hub."""
+
+    vehicle_capacity: int
+    """Maximum sum of sizes per vehicle allowed in the solution."""
+
+    deliveries: List[DeliveryOPT]
+    """List of deliveries to be solved."""
 
 
 @dataclass
@@ -112,12 +141,45 @@ class CVRPSolutionVehicle:
     @property
     def occupation(self) -> int:
         return sum([d.size for d in self.deliveries])
+@dataclass
+class CVRPSolutionVehicleOPT:
+
+    origin: Point
+    """Location of the origin hub."""
+
+    deliveries: List[DeliveryOPT]
+    """Ordered list of deliveries from the vehicle."""
+
+    @property
+    def circuit(self) -> List[Point]:
+        return (
+            [self.origin] + [d.point for d in self.deliveries] + [self.origin]
+        )
+    
+    @property
+    def no_return(self) -> List[Point]:
+        return (
+            [self.origin] + [d.point for d in self.deliveries]
+        )
+
+    @property
+    def occupation(self) -> int:
+        return sum([d.size for d in self.deliveries])
 
 
 @dataclass
 class CVRPSolution(JSONDataclassMixin):
     name: str
     vehicles: List[CVRPSolutionVehicle]
+    time_exec: float = 0.0 #???
+
+    @property
+    def deliveries(self):
+        return [d for v in self.vehicles for d in v.deliveries]
+@dataclass
+class CVRPSolutionOPT(JSONDataclassMixin):
+    name: str
+    vehicles: List[CVRPSolutionVehicleOPT]
     time_exec: float = 0.0 #???
 
     @property

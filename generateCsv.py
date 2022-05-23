@@ -1,9 +1,55 @@
 import os
 import csv
 import json
+from statistics import mean
 from loggibud.v1.distances import OSRMConfig
 from loggibud.v1.eval.task1 import evaluate_solution
 from loggibud.v1.types import *
+
+def convertToSolution(solutionOPT: CVRPSolutionOPT, inst: CVRPInstance):
+    namee = solutionOPT.name
+    timee = solutionOPT.time_exec
+    vehicless = []
+    for v in solutionOPT.vehicles:
+        deliveriess = []
+        for d in v.deliveries:
+            if d.size != 0:
+                delivery = Delivery(
+                    id = inst.deliveries[d.idu].id,
+                    point = d.point,
+                    size = d.size
+                )
+                deliveriess.append(delivery)
+        originn = inst.origin
+        vehicle = CVRPSolutionVehicle(
+            origin = originn,
+            deliveries = deliveriess
+        )
+        vehicless.append(vehicle)
+    solution = CVRPSolution(
+        name = namee,
+        vehicles = vehicless,
+        time_exec = timee
+    )
+    sol = {"": solution}
+    return solution, sol
+
+def rowCreateOptimizate(inst_path, sol_path, w, method, osrm_config):
+    line = [method]
+    inst = CVRPInstance.from_file(inst_path)
+    instance = {"": CVRPInstance.from_file(inst_path)}
+    solutionOPT = CVRPSolutionOPT.from_file(sol_path)
+    solution, sol = convertToSolution(solutionOPT, inst)
+    line.append(solution.name)
+    stems = instance.keys()
+    results = [
+        evaluate_solution(instance[stem], sol[stem], osrm_config) for stem in stems
+    ]
+    line.append(sum(results))
+    line.append(solution.time_exec)
+    line.append(len(solution.vehicles))
+    line.append(mean([sum([d.size for d in v.deliveries]) for v in solution.vehicles]))
+    w.writerow(line)
 
 def rowCreateBasicsMethods(inst_path, sol_path, w, method, osrm_config):
     line = [method]
@@ -18,12 +64,14 @@ def rowCreateBasicsMethods(inst_path, sol_path, w, method, osrm_config):
     line.append(sum(results))
     line.append(solution.time_exec)
     line.append(len(solution.vehicles))
+    line.append(mean([sum([d.size for d in v.deliveries]) for v in solution.vehicles]))
     w.writerow(line)
 
+
 def rowCreateKpprrf(inst_path, sol_path, w, method, osrm_config):
-    pathsa = sol_path.split('/')
-    path_s = pathsa[0]+"/"+pathsa[1]+"/kmeansp/"+pathsa[3]+pathsa[4].split(".")[0] + "-kmeans.json"
-    solKmeans = KmeansSolution.from_file(path_s)
+    # pathsa = sol_path.split('/')
+    # path_s = pathsa[0]+"/"+pathsa[1]+"/kmeansp/"+pathsa[3]+pathsa[4].split(".")[0] + "-kmeans.json"
+    # solKmeans = KmeansSolution.from_file(path_s)
     line = [method]
     instance = {"": CVRPInstance.from_file(inst_path)}
     solution = CVRPSolutionKpprrf.from_file(sol_path)
@@ -34,8 +82,9 @@ def rowCreateKpprrf(inst_path, sol_path, w, method, osrm_config):
         evaluate_solution(instance[stem], sol[stem], osrm_config) for stem in stems
     ]
     line.append(sum(results))
-    line.append(solution.time_execution + solKmeans.time_execution)
+    line.append(solution.time_execution) # + solKmeans.time_execution
     line.append(solution.total_vehicles)
+    line.append(mean([sum([d.size for d in v.deliveries]) for v in solution.vehicles]))
     w.writerow(line)
     # instance_broke = inst_path.split('.')
     # print(instance_broke)
@@ -52,7 +101,8 @@ def generateGeneralCsv(
     output: str, 
     path_input: str,
     methods: list,
-    osrm_config: OSRMConfig
+    osrm_config: OSRMConfig,
+    num_days: int
 ):
     path_input = path_input + city + "/"
     name = "cvrp-"+city.split("-")[1]+"-"+city.split("-")[0]+"-"
@@ -64,7 +114,7 @@ def generateGeneralCsv(
         outputx = output + method + "/" + city + "/"
         outputs = [
             outputx+name+str(i)+".json"
-            for i in range(90,120)
+            for i in range(90,90+num_days)
         ]
         for sol_path in outputs:
             path_broke = sol_path.split('/')
@@ -75,6 +125,8 @@ def generateGeneralCsv(
             try:
                 if method == "kpprrf":
                     rowCreateKpprrf(inst_path, sol_path, w, method, osrm_config)
+                elif method == "krs" or method == "krso" or method == "krsof":
+                    rowCreateOptimizate(inst_path, sol_path, w, method, osrm_config)
                 else:
                     rowCreateBasicsMethods(inst_path, sol_path, w, method, osrm_config)
             except Exception as e:
@@ -107,10 +159,11 @@ def computeCapacityRoute(vehicle):
 def main():    
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     path_outcsv = "output/csvs/"
-    cities = ["pa-0", "df-0", "rj-0"] 
+    cities = ["pa-0"] 
+    num_days = 30
     output = "data/results/"
     path_input = "data/cvrp-instances-1.0/dev/"
-    methods = ["kpprrf", "lkh3", "kmeans-partition", "kmeans-aggregation", "kmeansp"]
+    methods = ["krsof"]
     for city in cities:
         pathcsv = path_outcsv + city + '/generalCity.csv'
         generateGeneralCsv(
@@ -119,7 +172,8 @@ def main():
             output, 
             path_input,
             methods,
-            osrm_config
+            osrm_config, 
+            num_days
         )
 
 if __name__ == "__main__":

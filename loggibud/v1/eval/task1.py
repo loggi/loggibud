@@ -15,12 +15,18 @@ def evaluate_solution(
     # Check if all demands are present.
     # solution_demands = set(d for v in solution.vehicles for d in v.deliveries)
     # assert solution_demands == set(instance.deliveries)
-
+    # for v in solution.vehicles:
+    #     print("VEICULO =")
+    #     i = 0
+    #     for d in v.deliveries:
+    #         i += 1
+    #         print("id "+str(i)+" = "+str(d.id))
     # Check if max capacity is respected.
     max_capacity = max(
         sum(d.size for d in v.deliveries) for v in solution.vehicles
     )
-    assert max_capacity <= instance.vehicle_capacity
+    print(max_capacity)
+    # assert max_capacity <= instance.vehicle_capacity
 
     # Check if maximum number of origins is consistent.
     origins = set([v.origin for v in solution.vehicles])

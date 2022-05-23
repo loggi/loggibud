@@ -70,8 +70,8 @@ def solve_loggibud(alg: str, osrm_config, input: str, output: str):
   return "Not implemented"
 
 def execute_methods_loggibud():
-    methods = ["lkh3", "kmeans-partition", "kmeans-aggregation"]
-    cities = ["pa-1", "df-1", "df-2", "rj-1", "rj-2"]
+    methods = ["kmeans-partition"]
+    cities = ["rj-0"]
     num_days = 30
     input_dir = "./data/cvrp-instances-1.0/dev/"
     output = "../output/"

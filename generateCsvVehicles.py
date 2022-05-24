@@ -1,7 +1,19 @@
 import csv
 
 from loggibud.v1.types import *
-from loggibud.v1.distances import OSRMConfig
+from loggibud.v1.distances import OSRMConfig, calculate_distance_matrix_m
+
+def calculate_distance_vehicle(
+    vehicle: CVRPSolutionVehicle, 
+    matrix_distance): #matrix[dep->idu][dep->idu]
+    route = [0]
+    distance = 0
+    for d in vehicle.deliveries: #outra possibilidade é trazer o instance para saber a ordem
+        route.append(d.idu) #idu ou id??
+    for origem in range(0,len(vehicle.deliveries)-1):
+        destino = origem+1
+        distance += matrix_distance[origem][destino]
+    return distance
 
 def createCapacities(w, method, solution):
     line = [method]
@@ -17,9 +29,18 @@ def createDistances(w, method, matrix_distance, solution):
         line.append(calculate_distance_vehicle(v, matrix_distance))
     w.writerow(line)
 
+def selectSolution(method: str, solution_path: str):
+    if method == "kprf":
+        return CVRPSolutionKpprrf.from_file(solution_path) 
+    elif method == "kprfo":
+        return CVRPSolutionOPT.from_file(solution_path)
+    else:
+        return CVRPSolution.from_file(solution_path)
+
 def generateCsvVehicles(
     path_outcsv: str, 
-    city: str, 
+    city: str,
+    mc: str,
     month: str,
     day: int,
     output: str, 
@@ -28,11 +49,26 @@ def generateCsvVehicles(
     osrm_config: OSRMConfig):
     nameInstance = "cvrp-"+month+"-"+city+"-"+str(day)
     pathcsv = path_outcsv + city + '/'+nameInstance+'.csv'
+    instance = CVRPInstance.from_file(path_input)
+    points = [instance.origin]
+    for d in instance.deliveries:
+        points.append(d.point)
+    matrix_distance = calculate_distance_matrix_m(
+        points, osrm_config
+    )
     f = open(pathcsv, 'w', newline='', encoding='utf-8')
     w = csv.writer(f)
     for method in methods:
-        createCapacities(w, method,)
-        createDistances(w, method)
+        output_path = output + method + '/' + mc + '/' + nameInstance + ".json"
+        solution = selectSolution(method, output_path)
+        createCapacities(w, method, solution)
+        createDistances(w, method, matrix_distance, solution)
+    f.close()
+
+def generateImage(path_outimgs, name):
+    # ler o csv
+    # fazer box_plot das capacidades 
+    # fazer box_plot das distancias
 
 def main():    
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
@@ -51,6 +87,7 @@ def main():
             generateCsvVehicles(
                 path_outcsv, 
                 city, 
+                mc,
                 month,
                 day,
                 output, 

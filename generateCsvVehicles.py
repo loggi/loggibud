@@ -116,6 +116,7 @@ def createImages(path_outimgs, name, methods, dados, chave):
     plt.ylabel(chave)
     plt.xticks(x,methods)
     plt.savefig(path_outimgs+'/'+name+chave+".png")
+    plt.close()
 
 def generateImage(path_outimgs, name, pathcsv, methods):
     # ler o csv
@@ -134,30 +135,34 @@ def main():
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     path_outcsv = "output/vehicles/"
     path_outimgs = "output/imgs/vehicles/"
-    cities = ["pa-0"] 
+    cities = ["rj-0"] 
     num_days = 30
     output = "data/results/"
     path_input = "data/cvrp-instances-1.0/dev/"
     methods = ["krsof", "lkh3", "kmeans-partition", "kmeans-aggregation"]
     for dir_city in cities:
         for day in range(90,90+num_days):
-            mc = dir_city.split("-")
-            month = mc[1]
-            city = mc[0]
-            nameInstance = "cvrp-"+month+"-"+city+"-"+str(day)
-            pathcsv = generateCsvVehicles(
-                path_outcsv, 
-                dir_city,
-                nameInstance,
-                output, 
-                path_input,
-                methods,
-                osrm_config)
-            generateImage(
-                path_outimgs + dir_city,
-                nameInstance,
-                pathcsv, 
-                methods)
+            try:
+                mc = dir_city.split("-")
+                month = mc[1]
+                city = mc[0]
+                nameInstance = "cvrp-"+month+"-"+city+"-"+str(day)
+                print(nameInstance)
+                pathcsv = generateCsvVehicles(
+                    path_outcsv, 
+                    dir_city,
+                    nameInstance,
+                    output, 
+                    path_input,
+                    methods,
+                    osrm_config)
+                generateImage(
+                    path_outimgs + dir_city,
+                    nameInstance,
+                    pathcsv, 
+                    methods)
+            except Exception as e:
+                print(e)
 
 if __name__ == "__main__":
     main()

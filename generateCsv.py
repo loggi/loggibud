@@ -159,7 +159,7 @@ def computeCapacityRoute(vehicle):
 def main():    
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     path_outcsv = "output/csvs/"
-    cities = ["pa-0"] 
+    cities = ["rj-0"] 
     num_days = 30
     output = "data/results/"
     path_input = "data/cvrp-instances-1.0/dev/"

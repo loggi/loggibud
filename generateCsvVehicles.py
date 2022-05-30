@@ -15,7 +15,7 @@ def calculate_distance_vehicle(
     route = [0]
     distance = 0
     dicio = {}
-    if method == 'krsof':
+    if method == 'krsof' or method == "kpmipo":
         for d in vehicle.deliveries: #outra possibilidade é trazer o instance para saber a ordem
             route.append(d.idu) #idu ou id??
     else:
@@ -61,9 +61,9 @@ def createDistances(
     # w.writerow(line)
 
 def selectSolution(method: str, solution_path: str):
-    if method == "kpprrf":
+    if method == "kpprrf" or method == "kpmip":
         return CVRPSolutionKpprrf.from_file(solution_path) 
-    elif method == "krsof":
+    elif method == "krsof" or method == "kpmipo":
         return CVRPSolutionOPT.from_file(solution_path)
     else:
         return CVRPSolution.from_file(solution_path)
@@ -135,11 +135,11 @@ def main():
     osrm_config = OSRMConfig(host="http://ec2-34-222-175-250.us-west-2.compute.amazonaws.com")
     path_outcsv = "output/vehicles/"
     path_outimgs = "output/imgs/vehicles/"
-    cities = ["rj-0"] 
+    cities = ["pa-0"] 
     num_days = 30
     output = "data/results/"
     path_input = "data/cvrp-instances-1.0/dev/"
-    methods = ["krsof", "lkh3", "kmeans-partition", "kmeans-aggregation"]
+    methods = ["kpmip", "kpmipo"]
     for dir_city in cities:
         for day in range(90,90+num_days):
             try:

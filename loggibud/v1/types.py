@@ -38,6 +38,25 @@ class Point:
     """Latitude (y axis)."""
 
 @dataclass(unsafe_hash=True)
+class Vehicle:
+    """Vehicle build"""
+    id: int 
+    """Unique ID."""
+    
+    type_vehicle: str
+    """Vehicle type."""
+
+    capacity: int
+    """Maximum Capacity veícle"""
+
+    cust: int 
+    """Cust Transportation vehicle per km"""   
+
+    origin: Point
+    """Localization initial"""
+
+
+@dataclass(unsafe_hash=True)
 class DeliveryOPT:
     """A delivery request."""
     id: int
@@ -99,6 +118,36 @@ class CVRPInstance(JSONDataclassMixin):
 
     deliveries: List[Delivery]
     """List of deliveries to be solved."""
+@dataclass
+class CVRPInstanceHeterogeneous(JSONDataclassMixin):
+    name: str
+    """Unique name of this instance."""
+    
+    region: str
+    """Region name."""
+
+    origin: Point
+    """Location of the origin hub."""
+
+    vehicles: List[Vehicle]
+    """Maximum sum of sizes per vehicle allowed in the solution."""
+
+    deliveries: List[Delivery]
+    """List of deliveries to be solved."""
+@dataclass
+class ParamsVehicles(JSONDataclassMixin):
+    types: List[str]
+    """Tipo de veículos existentes."""
+
+    num_types: List[float]
+    """Número de tipos de veículo que deve existir no problema."""
+
+    capacities: List[int]
+    """Capacidade dos veículos existentes."""
+
+    custs: List[int]
+    """Custos dos veículos existentes."""
+
 @dataclass
 class CVRPInstanceOPT(JSONDataclassMixin):
     name: str

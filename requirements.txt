@@ -7,7 +7,7 @@ cligj==0.7.0
 Fiona==1.8.17
 geopandas==0.8.1
 idna==2.10
-joblib==0.17.0
+joblib==1.2.0
 munch==2.5.0
 numpy==1.19.3
 ortools==8.0.8283
